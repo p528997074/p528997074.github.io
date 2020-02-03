@@ -10,15 +10,15 @@
   
   
   
-  <meta name="description" content="IP地址IPV4编址方案IP地址由32位二进制数组成，这些位被划分为4个字节，中间用“.”号隔开，每组8位，以十进制数形式表示。分为网络地址和主机地址两个部分。 二进制数转十进制数：2^0x0+2^1x0 128 64 32 16 8 4 2 1IPV4一共有：2^32  大约40多亿个地址IP地址在网络中是唯一的，不能重复。对地址进行分类分共有地址、私有地址、保留地址NAT网络地址转换 IP地址">
+  <meta name="description" content="IP地址IPV4编址方案IP地址由32位二进制数组成，这些位被划分为4个字节，中间用“.”号隔开，每组8位，以十进制数形式表示。分为网络地址和主机地址两个部分。 二进制数转十进制数：2^0x0+2^1x0 128 64 32 16 8 4 2 1IPV4一共有：2^32  大约40多亿个地址IP地址在网络中是唯一的，不能重复。对地址进行分类分共有地址、私有地址、保留地址NAT网络地址转换">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IP地址">
 <meta property="og:url" content="http://yoursite.com/2020/02/03/IP%E5%9C%B0%E5%9D%80/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="IP地址IPV4编址方案IP地址由32位二进制数组成，这些位被划分为4个字节，中间用“.”号隔开，每组8位，以十进制数形式表示。分为网络地址和主机地址两个部分。 二进制数转十进制数：2^0x0+2^1x0 128 64 32 16 8 4 2 1IPV4一共有：2^32  大约40多亿个地址IP地址在网络中是唯一的，不能重复。对地址进行分类分共有地址、私有地址、保留地址NAT网络地址转换 IP地址">
+<meta property="og:description" content="IP地址IPV4编址方案IP地址由32位二进制数组成，这些位被划分为4个字节，中间用“.”号隔开，每组8位，以十进制数形式表示。分为网络地址和主机地址两个部分。 二进制数转十进制数：2^0x0+2^1x0 128 64 32 16 8 4 2 1IPV4一共有：2^32  大约40多亿个地址IP地址在网络中是唯一的，不能重复。对地址进行分类分共有地址、私有地址、保留地址NAT网络地址转换">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-03T08:15:33.195Z">
-<meta property="article:modified_time" content="2020-02-03T06:38:22.598Z">
+<meta property="article:modified_time" content="2020-02-03T08:46:34.079Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -93,6 +93,8 @@
         <h1 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h1><h2 id="IPV4编址方案"><a href="#IPV4编址方案" class="headerlink" title="IPV4编址方案"></a>IPV4编址方案</h2><p>IP地址由32位二进制数组成，这些位被划分为4个字节，中间用“.”号隔开，每组8位，以十进制数形式表示。分为网络地址和主机地址两个部分。</p>
 <p>二进制数转十进制数：2^0x0+2^1x0</p>
 <p>128 64 32 16 8 4 2 1<br>IPV4一共有：2^32  大约40多亿个地址<br>IP地址在网络中是唯一的，不能重复。<br>对地址进行分类<br>分共有地址、私有地址、保留地址<br>NAT网络地址转换</p>
+<a id="more"></a>
+
 <h2 id="IP地址分类"><a href="#IP地址分类" class="headerlink" title="IP地址分类"></a>IP地址分类</h2><h3 id="A类网络地址范围"><a href="#A类网络地址范围" class="headerlink" title="A类网络地址范围"></a>A类网络地址范围</h3><p>第一个字节的第一位必须是0，第一个字节的取值为0-127<br>即:0xxxxxxx  取值范围是：00000000-01111111 （0-127）<br>斜杆表示：1.1.1.1/8 网络号：8位 255.0.0.0<br>网络地址（号）（表示地址具体在哪个网络）:1.0.0.0<br>广播地址：1.255.255.255<br>在这个网络中有多少个地址呢？2^24<br>有效地址（可以配置给主机的地址）：2^24-2（减掉网络地址和广播地址）<br>子网掩码为：255.0.0.0<br>1.0.0.1到1.255.255.254</p>
 <h3 id="B类网络地址范围"><a href="#B类网络地址范围" class="headerlink" title="B类网络地址范围"></a>B类网络地址范围</h3><p>第一个字节的第一位必须是1，第二位必须是0，第一个字节的取值为128-191<br>即：10000000 取值范围是：10000000-10111111 （128-191）</p>
 <p>181.1.1.1/16<br>网络地址（号）（表示地址具体在哪个网络）:181.1.0.0<br>广播地址：181.1.255.255<br>有效地址（可以配置给主机的地址）：2^16-2（减掉网络地址和广播地址）<br>181.1.0.1-181.1.255.254</p>
@@ -241,7 +243,7 @@ gitment.render('gitmentContainer')
           </li>
         
           <li>
-            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE/">DHCP配置</a>
           </li>
         
       </ul>

@@ -10,15 +10,15 @@
   
   
   
-  <meta name="description" content="交换机工作原理及VLAN工作在数据链路层。 作用：分割冲突域，实现全双工通信，存储，过滤转发。 MAC子层与LLC子层介质访问控制（MAC）子层（802.3）将上层交下来的数据封装成帧进行发送(接收时迚行相反的过程，将帧拆卸)；实现和维护介质访访问控制协议，例如CSMA&#x2F;CD；比特差错检测；MAC帧的寻址，即MAC帧由哪个站（源站）収出，被哪个站／哪些站接收（目的站）。 逻辑链路控制（LLC）子层">
+  <meta name="description" content="交换机工作原理及VLAN工作在数据链路层。 作用：分割冲突域，实现全双工通信，存储，过滤转发。 MAC子层与LLC子层介质访问控制（MAC）子层（802.3）将上层交下来的数据封装成帧进行发送(接收时迚行相反的过程，将帧拆卸)；实现和维护介质访访问控制协议，例如CSMA&#x2F;CD；比特差错检测；MAC帧的寻址，即MAC帧由哪个站（源站）収出，被哪个站／哪些站接收（目的站）。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="交换机工作原理及VLAN">
 <meta property="og:url" content="http://yoursite.com/2020/02/03/%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8AVLAN/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="交换机工作原理及VLAN工作在数据链路层。 作用：分割冲突域，实现全双工通信，存储，过滤转发。 MAC子层与LLC子层介质访问控制（MAC）子层（802.3）将上层交下来的数据封装成帧进行发送(接收时迚行相反的过程，将帧拆卸)；实现和维护介质访访问控制协议，例如CSMA&#x2F;CD；比特差错检测；MAC帧的寻址，即MAC帧由哪个站（源站）収出，被哪个站／哪些站接收（目的站）。 逻辑链路控制（LLC）子层">
+<meta property="og:description" content="交换机工作原理及VLAN工作在数据链路层。 作用：分割冲突域，实现全双工通信，存储，过滤转发。 MAC子层与LLC子层介质访问控制（MAC）子层（802.3）将上层交下来的数据封装成帧进行发送(接收时迚行相反的过程，将帧拆卸)；实现和维护介质访访问控制协议，例如CSMA&#x2F;CD；比特差错检测；MAC帧的寻址，即MAC帧由哪个站（源站）収出，被哪个站／哪些站接收（目的站）。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-03T08:15:33.194Z">
-<meta property="article:modified_time" content="2020-02-03T06:24:18.931Z">
+<meta property="article:modified_time" content="2020-02-03T08:46:27.538Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -93,6 +93,8 @@
         <h1 id="交换机工作原理及VLAN"><a href="#交换机工作原理及VLAN" class="headerlink" title="交换机工作原理及VLAN"></a>交换机工作原理及VLAN</h1><p>工作在数据链路层。</p>
 <p>作用：分割冲突域，实现全双工通信，存储，过滤转发。</p>
 <h2 id="MAC子层与LLC子层"><a href="#MAC子层与LLC子层" class="headerlink" title="MAC子层与LLC子层"></a>MAC子层与LLC子层</h2><p>介质访问控制（MAC）子层（802.3）<br>将上层交下来的数据封装成帧进行发送(接收时迚行相反的过程，将帧拆卸)；<br>实现和维护介质访访问控制协议，例如CSMA/CD；<br>比特差错检测；<br>MAC帧的寻址，即MAC帧由哪个站（源站）収出，被哪个站／哪些站接收（目的站）。</p>
+<a id="more"></a>
+
 <p>逻辑链路控制（LLC）子层（802.2）<br>建立和释放数据链路层的逻辑连接；<br>提供与上层的接口；<br>给帧加上序号。</p>
 <h2 id="交换机的转发原理"><a href="#交换机的转发原理" class="headerlink" title="交换机的转发原理"></a>交换机的转发原理</h2><p>转发<br>   交换机根据MAC地址表单播转数据帧<br>学习<br>   MAC地址表是交换机通过学习接收的数据帧的源MAC地址来形成的<br>广播<br>   如果目标地址在MAC地址表中没有，交换机就向除接收到该数据帧的端口外的其他所有端口广播该数据帧<br>更新<br>   交换机MAC地址表的老时间是300秒<br>   交换机如果发现一个帧的入端口和MAC地址表中源MAC地址的所在端口不同，交换机将MAC地址重新学习到新的端口。</p>
 <p>单工,半双工与全双工<br>单工：只有一个信道，传输方向只能是单向的<br>半双工：只有一个信道，在同一时刻，只能是单向传输<br>全双工：双信道，同时可以有双向数据传输</p>
@@ -222,7 +224,7 @@ gitment.render('gitmentContainer')
           </li>
         
           <li>
-            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE/">DHCP配置</a>
           </li>
         
       </ul>

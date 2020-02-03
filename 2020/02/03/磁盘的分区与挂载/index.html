@@ -18,7 +18,7 @@
 <meta property="og:description" content="磁盘的分区与挂载1.磁盘(硬盘）在Linux系统中的表示方法  IDE硬盘：hda1 hda2  hdb1 hdc1 ….  SATA硬盘&#x2F;SCSI&#x2F;USB接口的移动盘：sda1 sda2 sdb1 2.硬盘分区：主分区    最多只能分4个，是可以直接使用，主要用于系统盘。编号为1-4 ​            扩展分区  不能直接使用，必须有主分区后才能将所有剩余空间分为扩展分区，可以建立逻辑">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-03T08:28:54.704Z">
-<meta property="article:modified_time" content="2020-02-03T08:14:08.931Z">
+<meta property="article:modified_time" content="2020-02-03T08:48:18.776Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -93,6 +93,8 @@
         <h2 id="磁盘的分区与挂载"><a href="#磁盘的分区与挂载" class="headerlink" title="磁盘的分区与挂载"></a>磁盘的分区与挂载</h2><h3 id="1-磁盘-硬盘）在Linux系统中的表示方法"><a href="#1-磁盘-硬盘）在Linux系统中的表示方法" class="headerlink" title="1.磁盘(硬盘）在Linux系统中的表示方法"></a>1.磁盘(硬盘）在Linux系统中的表示方法</h3><p>  IDE硬盘：hda1 hda2  hdb1 hdc1 ….<br>  SATA硬盘/SCSI/USB接口的移动盘：sda1 sda2 sdb1</p>
 <h3 id="2-硬盘分区："><a href="#2-硬盘分区：" class="headerlink" title="2.硬盘分区："></a>2.硬盘分区：</h3><p>主分区    最多只能分4个，是可以直接使用，主要用于系统盘。编号为1-4</p>
 <p>​            扩展分区  不能直接使用，必须有主分区后才能将所有剩余空间分为扩展分区，可以建立逻辑分区。1-4，除主分区外。<br>​            逻辑分区   可以直接使用，编号从5开始，不能做为系统引导盘。</p>
+<a id="more"></a>
+
 <h3 id="3-磁盘分区的格式："><a href="#3-磁盘分区的格式：" class="headerlink" title="3.磁盘分区的格式："></a>3.磁盘分区的格式：</h3><p>windows 系统中的格式有 fat fat 16  fat32   分区大小也会受到限制、文件的大小会受到限制，安全性能不高。</p>
 <p>​           NTFS   支持大容量分区，支持NTFS权限设置，安全性能较高<br>​           Linux系统中的常用格式有 ext2 ext3 ext4</p>
 <h3 id="4-挂载"><a href="#4-挂载" class="headerlink" title="4.挂载"></a>4.挂载</h3><p>​    步骤一：向Linux服务器添加一块硬盘，并重启系统。<br>​    步骤二：使用命令查看系统当中的硬盘及其分区信息<br>​            ls /dev/sd*   查看/dev目录下的硬盘文件<br>​            fdisk -l   查看硬盘分区的信息<br>​    步骤三：对磁盘进行分区<br>​            fdisk 磁盘文件名<br>​             fdisk /dev/sdb   对sdb这块硬盘进行分区<br>​    步骤四：格式化磁盘分区<br>​            mkfs -t 分区格式 分区名称<br>​            mkfs -t ext4 /dev/sdb1<br>​    步骤五：挂载分区<br>​           mount -t 分区格式 设备名称  空目录名称<br>​           mount -t ext4 /dev/sdb1 /mnt/sdb1<br>​           mount -t ext4 -o rw /dev/sdb1 /mnt/sdb1<br>​           检查是否挂载成功：mount<br>​           取消挂载：umount 挂载目录的名称 （不能在挂载目录下进行）<br>​           查看已挂载分区的信息：df -hT /mnt/sdb1<br>​           使用mount命令挂载的文件系统，只是临时的，如果系统重启则需要重新挂载。<br>   步骤六：可以使用/etc/fstab文件对文件系统进行永久挂载。</p>
@@ -187,11 +189,11 @@
 <nav id="article-nav">
   <div class="article-nav-block">
     
-      <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/" id="article-nav-newer" class="article-nav-link-wrap">
+      <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE/" id="article-nav-newer" class="article-nav-link-wrap">
         <strong class="article-nav-caption"></strong>
         <div class="article-nav-title">
           
-            DHCP配置：
+            DHCP配置
           
         </div>
       </a>
@@ -286,7 +288,7 @@ gitment.render('gitmentContainer')
           </li>
         
           <li>
-            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE/">DHCP配置</a>
           </li>
         
       </ul>

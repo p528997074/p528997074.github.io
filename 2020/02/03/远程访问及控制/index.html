@@ -18,7 +18,7 @@
 <meta property="og:description" content="远程访问及控制1.配置OpenSSH服务端1.1配置SSH及配置文件   openssh服务器由openssh、openssh-server等软件包提供（默认已安装），并已将sshd添加为标准的系统服务。执行“systemctl status sshd.service”即可按默认配置启动sshd服务，包括root在内的大部份用户（只要拥有合法的登录shell）都可以远程登录系统。   sshd服务">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-03T08:29:01.319Z">
-<meta property="article:modified_time" content="2020-02-03T07:03:15.099Z">
+<meta property="article:modified_time" content="2020-02-03T08:47:04.361Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -91,6 +91,8 @@
     <div class="article-content article-content-cloud" itemprop="articleBody">
       
         <h1 id="远程访问及控制"><a href="#远程访问及控制" class="headerlink" title="远程访问及控制"></a>远程访问及控制</h1><h2 id="1-配置OpenSSH服务端"><a href="#1-配置OpenSSH服务端" class="headerlink" title="1.配置OpenSSH服务端"></a>1.配置OpenSSH服务端</h2><h3 id="1-1配置SSH及配置文件"><a href="#1-1配置SSH及配置文件" class="headerlink" title="1.1配置SSH及配置文件"></a>1.1配置SSH及配置文件</h3><p>   openssh服务器由openssh、openssh-server等软件包提供（默认已安装），并已将sshd添加为标准的系统服务。执行“systemctl status sshd.service”即可按默认配置启动sshd服务，包括root在内的大部份用户（只要拥有合法的登录shell）都可以远程登录系统。<br>   sshd服务的配置文件是：/etc/ssh/sshd_config，正确调整相关配置项，可以进一步提高sshd远程登录的安全性。下面介绍一些最常用的配置项，关于sshd_config文件的更多配置可参考man手册。</p>
+<a id="more"></a>
+
 <h3 id="1-2服务监听选项"><a href="#1-2服务监听选项" class="headerlink" title="1.2服务监听选项"></a>1.2服务监听选项</h3><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br><span class="line"> Port 22                             &#x2F;&#x2F;监听端口为22</span><br><span class="line"> ListenAddress 192.168.10.1          &#x2F;&#x2F;监听地址为192.168.10.1</span><br><span class="line">.......                            &#x2F;&#x2F;省略内容</span><br><span class="line"> UseDNS yes                          &#x2F;&#x2F;禁用DNS反射解析</span><br><span class="line">......                             &#x2F;&#x2F;省略内容</span><br><span class="line">[root@localhost ~]# systemctl restart sshd</span><br></pre></td></tr></table></figure></div>
 
 <h3 id="1-3用户登录控制"><a href="#1-3用户登录控制" class="headerlink" title="1.3用户登录控制"></a>1.3用户登录控制</h3><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br><span class="line">LoginGraceTime 2m         &#x2F;&#x2F;登录验证时间   </span><br><span class="line">PermitRootLogin no        &#x2F;&#x2F;禁止root用户登录</span><br><span class="line">MaxAuthTries 6            &#x2F;&#x2F;最大重试次数</span><br><span class="line">MaxSessions 10            &#x2F;&#x2F;最大连接数</span><br><span class="line">PermitEmptyPasswords no   &#x2F;&#x2F;禁止空密码用户登录</span><br><span class="line">如果只允许或禁止某些用户登录时，可以使用AllowUsers或DenyUsers配置，两者用法类似（不能同时使用）。</span><br><span class="line">AllowUsers stu1 stu2@192.168.10.100       &#x2F;&#x2F;多个用户用空格隔开</span><br></pre></td></tr></table></figure></div>
@@ -233,7 +235,7 @@ gitment.render('gitmentContainer')
           </li>
         
           <li>
-            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE/">DHCP配置</a>
           </li>
         
       </ul>
