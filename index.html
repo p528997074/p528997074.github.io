@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>学无止境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  <meta property="og:type" content="website">
+<meta property="og:title" content="学无止境">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="学无止境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/default-avatar.jpg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/highlight.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="fullpage" class="mobile-nav-right">
+    
+      <div id="wrapper" title="图片来自网络">
+    
+    
+      <header id="header">
+  <div id="nav-toggle" class="nav-toggle"></div>
+  <div class="head-box global-width">
+    <nav class="nav-box nav-right">
+      
+        <a class="nav-item" href="/" title
+        
+        >首页</a>
+      
+        <a class="nav-item" href="/archives" title
+        
+        >归档</a>
+      
+    </nav>
+  </div>
+</header>
+      <div id="middlecontent" title class="global-width sidebar-right">
+        <section id="main">
+  
+    <article id="post-nginx安全加固" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/nginx%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">nginx安全加固</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/nginx%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/" class="article-date">
+  <time datetime="2020-02-03T08:29:08.233Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="nginx安全加固"><a href="#nginx安全加固" class="headerlink" title="nginx安全加固"></a>nginx安全加固</h1><h2 id="日志配置"><a href="#日志配置" class="headerlink" title="日志配置"></a>日志配置</h2><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(http标签内，在所有的server标签内可以调用)：</span><br><span class="line">log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;</span><br><span class="line">   &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;</span><br><span class="line">   &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br></pre></td></tr></table></figure></div>
+
+<p> 在server标签内，定义日志路径 </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">access_log logs&#x2F;host.access.log main</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="禁止目录浏览"><a href="#禁止目录浏览" class="headerlink" title="禁止目录浏览"></a>禁止目录浏览</h2><p> 编辑配置文件，HTTP模块添加如下一行内容： </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autoindex off;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="限制目录执行权限"><a href="#限制目录执行权限" class="headerlink" title="限制目录执行权限"></a>限制目录执行权限</h2><p> 　编辑配置文件，在server标签内添加如下内容： </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#示例：去掉单个目录的PHP执行权限</span><br><span class="line">location ~ &#x2F;attachments&#x2F;.*\.(php|php5)?$ &#123;</span><br><span class="line">deny all;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#示例：去掉多个目录的PHP执行权限</span><br><span class="line">location ~</span><br><span class="line">&#x2F;(attachments|upload)&#x2F;.*\.(php|php5)?$ &#123;</span><br><span class="line">deny all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>以上的配置文件代码需要放到 location ~ .php{…}上面，如果放到下面是无效的;</p>
+<p>attachments需要写相对路径，不能写绝对路径。</p>
+<h2 id="错误页面重定向"><a href="#错误页面重定向" class="headerlink" title="错误页面重定向"></a>错误页面重定向</h2><p> 修改配置，在http{}段加入如下内容 </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">...</span><br><span class="line">fastcgi_intercept_errors on;</span><br><span class="line">error_page 401 &#x2F;401.html;</span><br><span class="line">error_page 402 &#x2F;402.html;</span><br><span class="line">error_page 403 &#x2F;403.html;</span><br><span class="line">error_page 404 &#x2F;404.html;</span><br><span class="line">error_page 405 &#x2F;405.html;</span><br><span class="line">error_page 500 &#x2F;500.html;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line">修改内容：</span><br><span class="line">ErrorDocument 400 &#x2F;custom400.html</span><br><span class="line">ErrorDocument 401 &#x2F;custom401.html</span><br><span class="line">ErrorDocument 403 &#x2F;custom403.html</span><br><span class="line">ErrorDocument 404 &#x2F;custom404.html</span><br><span class="line">ErrorDocument 405 &#x2F;custom405.html</span><br><span class="line">ErrorDocument 500 &#x2F;custom500.html</span><br><span class="line">其中401.html、402.html、403.html、404.html、405.html、500.html 为要指定的错误提示页面。</span><br></pre></td></tr></table></figure></div>
+
+<p> <strong>隐藏版本信息</strong> </p>
+<p> 编辑配置文件，添加http模块中如下一行内容： </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server_tokens off;</span><br></pre></td></tr></table></figure></div>
+
+<p> <strong>限制HTTP请求方法</strong> </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ($request_method !~ ^(GET|HEAD|POST)$ ) &#123;</span><br><span class="line">return 444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p> 只允许常用的GET和POST方法，顶多再加一个HEAD方法 </p>
+<p> <strong>限制IP访问</strong> </p>
+<p> 　编辑配置文件，在server标签内添加如下内容： </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">deny 192.168.1.1; #拒绝IP</span><br><span class="line">allow 192.168.1.0&#x2F;24; #允许IP</span><br><span class="line">allow 10.1.1.0&#x2F;16; #允许IP</span><br><span class="line">deny all; #拒绝其他所有IP</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p> <strong>限制并发和速度</strong> </p>
+<p> 　编辑配置文件，在server标签内添加如下内容： </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">limit_zone one $binary_remote_addr 10m;</span><br><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">     listen   80;</span><br><span class="line">     server_name down.test.com;</span><br><span class="line">     index index.html index.htm index.php;</span><br><span class="line">     root  &#x2F;usr&#x2F;local&#x2F;www;</span><br><span class="line">     #Zone limit;</span><br><span class="line">     location &#x2F; &#123;</span><br><span class="line">         limit_conn one 1;</span><br><span class="line">         limit_rate 20k;</span><br><span class="line">     &#125;</span><br><span class="line">………</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p> <strong>控制超时时间</strong> </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">client_body_timeout 10;  #设置客户端请求主体读取超时时间</span><br><span class="line">client_header_timeout 10;  #设置客户端请求头读取超时时间</span><br><span class="line">keepalive_timeout 5 5;  #第一个参数指定客户端连接保持活动的超时时间，第二个参数是可选的，它指定了消息头保持活动的有效时间</span><br><span class="line">send_timeout10;  #指定响应客户端的超时时间</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="风险操作项"><a href="#风险操作项" class="headerlink" title="风险操作项"></a>风险操作项</h2><p> <strong>Nginx降权</strong> </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">　user nobody;</span><br></pre></td></tr></table></figure></div>
+
+<p> <strong>防盗链</strong> </p>
+<p>编辑配置文件，在server标签内添加如下内容：</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~* ^.+\.(gif|jpg|png|swf|flv|rar|zip)$ &#123;</span><br><span class="line">    valid_referers none blocked server_names *.nsfocus.com http:&#x2F;&#x2F;localhost baidu.com;</span><br><span class="line">    if ($invalid_referer) &#123;</span><br><span class="line">        rewrite ^&#x2F; [img]http:&#x2F;&#x2F;www.XXX.com&#x2F;images&#x2F;default&#x2F;logo.gif[&#x2F;img];</span><br><span class="line">        # return 403;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-apache安全加固" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/apache%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">apache安全加固</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/apache%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/" class="article-date">
+  <time datetime="2020-02-03T08:29:08.231Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="apache安全加固"><a href="#apache安全加固" class="headerlink" title="apache安全加固"></a>apache安全加固</h1><h2 id="禁止目录浏览"><a href="#禁止目录浏览" class="headerlink" title="禁止目录浏览"></a>禁止目录浏览</h2><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Options FollowSymLinks</span><br><span class="line"></span><br><span class="line">AllowOverride None</span><br></pre></td></tr></table></figure></div>
+
+<p> 将Options Indexes FollowSymLinks 中的Indexes 去掉，就可以禁止 Apache显示该目录结构。  <code>Indexes</code>的作用就是当该目录下没有 index.html 文件时，自动显示目录结构。 </p>
+<p> 禁止 Apache 访问 Web 目录之外的任何文件。 </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Order Deny,Allow</span><br><span class="line"></span><br><span class="line">Deny from all</span><br></pre></td></tr></table></figure></div>
+
+<p> 设置可访问的目录。 </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Order allow,deny</span><br><span class="line"></span><br><span class="line">Allow from &#x2F;web</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>设置 Apache 的默认页面：</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DirectoryIndex index.html</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="日志配置"><a href="#日志配置" class="headerlink" title="日志配置"></a>日志配置</h2><p>Window下：</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%i\&quot; \&quot;%i\&quot;&quot; combined</span><br><span class="line"></span><br><span class="line">CustomLog &quot;|bin&#x2F;rotatelogs.exe logs&#x2F;localhost_access_log.%Y-%m-%d.log 86400 480&quot; combined</span><br></pre></td></tr></table></figure></div>
+
+<p>增加红色字体这一行，即可开启apache日志并且按照日期划分创建。</p>
+<h2 id="错误页面处理"><a href="#错误页面处理" class="headerlink" title="错误页面处理"></a>错误页面处理</h2><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ErrorDocument 400 &#x2F;custom400.html</span><br><span class="line"></span><br><span class="line">ErrorDocument 401 &#x2F;custom401.html</span><br><span class="line"></span><br><span class="line">ErrorDocument 403 &#x2F;custom403.html</span><br><span class="line"></span><br><span class="line">ErrorDocument 404 &#x2F;custom404.html</span><br><span class="line"></span><br><span class="line">ErrorDocument 405 &#x2F;custom405.html</span><br><span class="line"></span><br><span class="line">ErrorDocument 500 &#x2F;custom500.html</span><br></pre></td></tr></table></figure></div>
+
+<p>其中Customxxx.html 为要设置的错误页面。 </p>
+<h3 id="隐藏Apache版本号-及其它敏感信息"><a href="#隐藏Apache版本号-及其它敏感信息" class="headerlink" title="隐藏Apache版本号 及其它敏感信息"></a><strong>隐藏Apache版本号</strong> 及其它敏感信息</h3><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ServerSignature Off</span><br><span class="line"></span><br><span class="line">ServerTokens Prod</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="关闭-TRACE功能"><a href="#关闭-TRACE功能" class="headerlink" title="关闭 TRACE功能"></a>关闭 TRACE功能</h3><p> 关闭 TRACE 功能，防止 TRACE 方法被访问者恶意利用。</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TraceEnable Off</span><br></pre></td></tr></table></figure></div>
+
+<p> <strong>限制IP访问</strong> </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Options FollowSymLinks</span><br><span class="line"></span><br><span class="line">AllowOverride None</span><br><span class="line"></span><br><span class="line">Order Deny,Allow</span><br><span class="line"></span><br><span class="line">Deny from all</span><br><span class="line"></span><br><span class="line">Allow from 192.168.204.0&#x2F;24</span><br></pre></td></tr></table></figure></div>
+
+<p>只允许从192.168.204.0/24 IP段内的用户访问，一般在限制后台访问时用到。</p>
+<h2 id="风险操作项"><a href="#风险操作项" class="headerlink" title="风险操作项"></a>风险操作项</h2><p> <strong>Apache 降权</strong> </p>
+<p>备份httpd.conf文件</p>
+<p>修改：</p>
+<p>User nobody</p>
+<p>Group# -1</p>
+<p>重启 APACHE</p>
+<p>/apachectl restart</p>
+<p>Windows中操作步骤为：</p>
+<p>新建系统用户组www，新建系统用户apache并设置密码。</p>
+<p>运行services.msc打开服务管理界面，双击apache2.2服务打开属性页，点击“登录”选项卡，选择“此账户”，填写账号和密码，确定。</p>
+<p> <strong>防CC攻击</strong> </p>
+<p>Timeout 10</p>
+<p>KeepAlive On</p>
+<p>KeepAliveTimeout 15</p>
+<p>AcceptFilter http data</p>
+<p>AcceptFilter https data</p>
+<p> <strong>限制请求消息长度</strong> </p>
+<p> LimitRequestBody 102400 </p>
+<p> 上传文件的大小也会受到此参数限制。 </p>
+<h3 id="绑定监听地址"><a href="#绑定监听地址" class="headerlink" title="绑定监听地址"></a>绑定监听地址</h3><p> 服务器有多个 IP 地址时，只监听提供服务的 IP 地址。 </p>
+<p> 查看是否绑定 IP 地址 </p>
+<p> cat /etc/httpd/conf/httpd.conf|grep Listen </p>
+<p> Listen x.x.x.x:80 </p>
+<p> 禁用 PUT、DELETE 等危险的 HTTP 方法 </p>
+<p> 只允许 get、post 方法。 </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;Location &#x2F;&gt;  </span><br><span class="line"></span><br><span class="line">&lt;LimitExcept GET POST CONNECT OPTIONS&gt; </span><br><span class="line"></span><br><span class="line">  Order Allow,Deny </span><br><span class="line"></span><br><span class="line">  Deny from all </span><br><span class="line"></span><br><span class="line">&lt;&#x2F;LimitExcept&gt; </span><br><span class="line"></span><br><span class="line">&lt;&#x2F;Location&gt;</span><br></pre></td></tr></table></figure></div>
+
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-远程访问及控制" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/">远程访问及控制</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/" class="article-date">
+  <time datetime="2020-02-03T08:29:01.319Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="远程访问及控制"><a href="#远程访问及控制" class="headerlink" title="远程访问及控制"></a>远程访问及控制</h1><h2 id="1-配置OpenSSH服务端"><a href="#1-配置OpenSSH服务端" class="headerlink" title="1.配置OpenSSH服务端"></a>1.配置OpenSSH服务端</h2><h3 id="1-1配置SSH及配置文件"><a href="#1-1配置SSH及配置文件" class="headerlink" title="1.1配置SSH及配置文件"></a>1.1配置SSH及配置文件</h3><p>   openssh服务器由openssh、openssh-server等软件包提供（默认已安装），并已将sshd添加为标准的系统服务。执行“systemctl status sshd.service”即可按默认配置启动sshd服务，包括root在内的大部份用户（只要拥有合法的登录shell）都可以远程登录系统。<br>   sshd服务的配置文件是：/etc/ssh/sshd_config，正确调整相关配置项，可以进一步提高sshd远程登录的安全性。下面介绍一些最常用的配置项，关于sshd_config文件的更多配置可参考man手册。</p>
+<h3 id="1-2服务监听选项"><a href="#1-2服务监听选项" class="headerlink" title="1.2服务监听选项"></a>1.2服务监听选项</h3><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br><span class="line"> Port 22                             &#x2F;&#x2F;监听端口为22</span><br><span class="line"> ListenAddress 192.168.10.1          &#x2F;&#x2F;监听地址为192.168.10.1</span><br><span class="line">.......                            &#x2F;&#x2F;省略内容</span><br><span class="line"> UseDNS yes                          &#x2F;&#x2F;禁用DNS反射解析</span><br><span class="line">......                             &#x2F;&#x2F;省略内容</span><br><span class="line">[root@localhost ~]# systemctl restart sshd</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="1-3用户登录控制"><a href="#1-3用户登录控制" class="headerlink" title="1.3用户登录控制"></a>1.3用户登录控制</h3><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br><span class="line">LoginGraceTime 2m         &#x2F;&#x2F;登录验证时间   </span><br><span class="line">PermitRootLogin no        &#x2F;&#x2F;禁止root用户登录</span><br><span class="line">MaxAuthTries 6            &#x2F;&#x2F;最大重试次数</span><br><span class="line">MaxSessions 10            &#x2F;&#x2F;最大连接数</span><br><span class="line">PermitEmptyPasswords no   &#x2F;&#x2F;禁止空密码用户登录</span><br><span class="line">如果只允许或禁止某些用户登录时，可以使用AllowUsers或DenyUsers配置，两者用法类似（不能同时使用）。</span><br><span class="line">AllowUsers stu1 stu2@192.168.10.100       &#x2F;&#x2F;多个用户用空格隔开</span><br></pre></td></tr></table></figure></div>
+
+<p>登录验证方式</p>
+<p>（1）密码验证</p>
+<p>（2）密钥对验证</p>
+<p>公钥与私钥是成对生成，这两个密钥互不相同，可以互相加密与解密。<br>不能根据一个密钥来推算出另一个密钥。<br>公钥对外公开，私钥只有私钥的持有人才知道。</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br><span class="line">asswordAuthentication yes                     &#x2F;&#x2F;启用密码验证</span><br><span class="line">PubkeyAuthentication yes                      &#x2F;&#x2F;启用密钥对验证</span><br><span class="line">AuthorizedKeysFile     .ssh&#x2F;authorized_keys   &#x2F;&#x2F;指定公钥库数据文件</span><br></pre></td></tr></table></figure></div>
+
+<p>使用SSH客户端程序</p>
+<p>命令程序ssh、scp、sftp</p>
+<p>ssh远程登录</p>
+<p>通过ssh命令可以远程登录sshd服务，为用户提供一个安全的shell环境，以便对服务器进行管理和维护。</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ssh student@192.168.75.158</span><br><span class="line">Are you sure you want to continue connecting (yes&#x2F;no)? yes  &#x2F;&#x2F;接受密钥</span><br><span class="line">student@192.168.75.158&#39;s password:    &#x2F;&#x2F;输入密码</span><br></pre></td></tr></table></figure></div>
+
+<p>接收的密钥信息将保存到~/.ssh/known_hosts文件中。</p>
+<p>如果sshd服务器使用了非默认的端口号（如2345),则在登录时必须通过“-p”选项指定端口号。</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 2345 student@192.168.75.158</span><br></pre></td></tr></table></figure></div>
+
+<p>scp远程复制</p>
+<p>使用scp命令可以利用SSH安全连接与远程主机相互复制文件。使用scp命令时，除了必须指定复制源、目标外，还应指定目标主机地址、登录用户，执行后提示验证口令即可。</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">将远程主机的&#x2F;etc&#x2F;passwd文件复制到本机，</span><br><span class="line">将本机的&#x2F;var&#x2F;log&#x2F;复制到远程主机。</span><br><span class="line">[root@localhost ~]#scp root@192.168.75.158:&#x2F;etc&#x2F;passwd &#x2F;root&#x2F;pwd11.txt</span><br><span class="line">[root@localhost ~]#scp -r &#x2F;var&#x2F;log root@192.168.75.158:&#x2F;logbak</span><br></pre></td></tr></table></figure></div>
+
+<p>sftp安全ftp</p>
+<p>通过sftp命令可以利用SSH安全连接与远程主机上传、下载文件 ，采用了与FTP类似的登录过程和交互环境，便于目录资源管理。</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">使用sftp远程登录，并进行文件上传与下载。</span><br><span class="line">[root@localhost ~]#sftp student@192.168.75.158</span><br></pre></td></tr></table></figure></div>
+
+<p>构建密钥对验证的SSH体系<br>方法一：在Linux客户端使用密钥对登录服务器<br>（1）在客户端创建密钥对<br>student@localhost log]$ ssh-keygen -t rsa<br>Generating public/private rsa key pair.<br>Enter file in which to save the key (/home/student/.ssh/id_rsa):  //指定私钥位置<br>Enter passphrase (empty for no passphrase):  //设置私钥短语<br>Enter same passphrase again:      //确认所设置的短语<br>（2）将公钥上传至服务器<br>[student@localhost ~]$ scp ~/.ssh/id_rsa.pub <a href="mailto:root@192.168.75.158">root@192.168.75.158</a>:/tmp/<br>（3）在服务器中导入公钥文本<br>[root@localhost ~]# mkdir -p /home/stu1/.ssh<br>[root@localhost .ssh]# cat /tmp/id_rsa.pub &gt;&gt; /home/stu1/.ssh/authorized_keys<br>[root@localhost .ssh]# ll<br>-rw-r–r–. 1 root root 411 12月 30 22:59 authorized_keys<br>（4）配置sshd_config文件允许密钥对访问<br>PasswordAuthentication yes<br>PubkeyAuthentication yes<br>AuthorizedKeysFile      .ssh/authorized_keys<br>（5）客户端使用密钥对登录服务器<br>[student@localhost ~]$ssh <a href="mailto:stu1@192.168.75.158">stu1@192.168.75.158</a> </p>
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-服务与进程,文件共享" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/%E6%9C%8D%E5%8A%A1%E4%B8%8E%E8%BF%9B%E7%A8%8B,%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/">服务与进程,文件共享</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/%E6%9C%8D%E5%8A%A1%E4%B8%8E%E8%BF%9B%E7%A8%8B,%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/" class="article-date">
+  <time datetime="2020-02-03T08:29:01.317Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h2 id="服务与进程"><a href="#服务与进程" class="headerlink" title="服务与进程"></a>服务与进程</h2><h3 id="linux系统的运行级别"><a href="#linux系统的运行级别" class="headerlink" title="linux系统的运行级别"></a>linux系统的运行级别</h3><p>运行级别0：关机模式：poweroff.target</p>
+<p>运行级别1：单用户模式，仅用于root用户对系统进行维护时。rescue.target</p>
+<p>运行级别2：多用户模式（没有NFS）。multi-user.target</p>
+<p>运行级别3：完全多用户模式，即多用户文本界面模式，是标准的运行级别。multi-user.target</p>
+<p>运行级别4：特定运行级别，基本不用的用户模式。graphical.target</p>
+<p>运行级别5：X11，Linux系统的图形界面运行级别。graphical.target</p>
+<p>运行级别6：重新启动。reboot.target</p>
+<p>target文件保存在：/lib/systemd/system目录中。</p>
+<p>系统运行级别之间的切换</p>
+<p>查看系统当前运行级别：runlevel</p>
+<p>init命令进行切换</p>
+<h3 id="方法一：重新设置连接文件"><a href="#方法一：重新设置连接文件" class="headerlink" title="方法一：重新设置连接文件"></a>方法一：重新设置连接文件</h3><p>rm -rf /etc/systemd/system/default.target</p>
+<p>ln -s /lib/systemd/system/runlevlel3.target  /etc/systemd/system/default.tart</p>
+<h3 id="方法二：使用systemctl命令"><a href="#方法二：使用systemctl命令" class="headerlink" title="方法二：使用systemctl命令"></a>方法二：使用systemctl命令</h3><p>systemctl set-default runlevel3.target</p>
+<p>使用systemctl管理服务</p>
+<p>systemctl  选项 服务名</p>
+<p>start：启动      stop：停止   restart：重启  status：服务状态</p>
+<h3 id="设置服务的自启动状态"><a href="#设置服务的自启动状态" class="headerlink" title="设置服务的自启动状态"></a>设置服务的自启动状态</h3><p>使用ntsysv 命令设置服务的自启动</p>
+<p>ntsysv  –runlevel</p>
+<p>level:启动级别</p>
+<p>使用systemctl命令设置服务的自启动</p>
+<p>查看自启动的状态：is-enabled   服务名称</p>
+<p>开启服务的自启动：systemctl enable  服务名称</p>
+<p>关闭服务的自启动：systemctl  disable 服务名称</p>
+<p>查看所有的服务</p>
+<p>关闭selinux安全机制</p>
+<p>setenforce 0</p>
+<p>查看 getenforce  [以P开头：关闭   以E开头：开启]</p>
+<p>systemctl  列出所有的系统服务</p>
+<p>systemctl  list-unit-files   列出所有启动unit</p>
+<p>list-units  -type=service  -all  列出所有service 类型的unit</p>
+<p>list-units  -type=service  -all  grep  cpu   列出cpu电源管理机制的服务</p>
+<p>systemctl poweroff   系统关机</p>
+<p>reboot    重新启动</p>
+<p>suspend     进行睡眠模式</p>
+<p>hibernate    进入休眠模式</p>
+<p>rescue    强制进入救援模式</p>
+<p>energency    强制进入紧急救援模式</p>
+<h3 id="进程的延迟与周期调度"><a href="#进程的延迟与周期调度" class="headerlink" title="进程的延迟与周期调度"></a>进程的延迟与周期调度</h3><p>pa 选项</p>
+<p>-A :显示系统中所有进程的信息，与-e具有相同的功能。</p>
+<p>-a：显示所有用户进程的信息。</p>
+<p>-f：完整的显示进程的所有信息</p>
+<p>-l :  以长格式显示进程信息</p>
+<p>-r:只显示正在运行的进程</p>
+<p>-u:显示面向用户的格式</p>
+<p>-x:显示所有非控制终端上的进程信息。</p>
+<p>-p:显示由进程ID指定的进程的信息</p>
+<p>-t:显示指定终端上的进程的信息。</p>
+<p>杀死进程</p>
+<p>kill  信号代码（9） pid</p>
+<p>killall  信号代码  进程名</p>
+<p>查看内容使用情况：free</p>
+<p>查看CPU使用情况：top  -bn</p>
+<p>产看硬盘使用情况：df   -hT</p>
+<p>进程的调度</p>
+<h4 id="延迟性调试命令：at"><a href="#延迟性调试命令：at" class="headerlink" title="延迟性调试命令：at"></a>延迟性调试命令：at</h4><p>指定时间运行指定的文件</p>
+<p>at  -f  文件   -m  时间</p>
+<p>按CTRL+D退出</p>
+<p>绝对表示法：MM/DD/YYYY   ,today或tomorrow 来表示今天或明天</p>
+<p>相对表示法：now+num+时间单位，minutes，hours，days，weeks</p>
+<h4 id="周期调度：crontab"><a href="#周期调度：crontab" class="headerlink" title="周期调度：crontab"></a>周期调度：crontab</h4><p>文件存放位置：/var/spool/cron</p>
+<p>计划调度服务</p>
+<p>crontab -u user {-e | -l | -r}</p>
+<p>-u:为指定的用户设置计划任务</p>
+<p>-e:编辑计划任务列表</p>
+<p>-l：查看指定用户的计划任务列表，默认当前用户</p>
+<p>-r：删除用户的计划任务列表</p>
+<p>crontab -u user file （file代表任务列表文件）</p>
+<p>格式</p>
+<p>分钟  小时  日期 月份  星期      任务内容设置</p>
+<p>*表示该范围内的任意时间</p>
+<p>，表示间隔的多个不连续时间点</p>
+<p>-表示一个连续的时间范围</p>
+<p>/  指定间隔的时间频率</p>
+<h2 id="文件共享"><a href="#文件共享" class="headerlink" title="文件共享"></a>文件共享</h2><p>NFS ：扩展任务（linux系统之间的文件共享）</p>
+<p> NFS服务器可以让PC将网络中的NFS服务器共享的目录挂载到本地端的文件系统中，而在本地端的系统中来看，那个远程主机的目录就好像是自己的一个磁盘分区一样，在使用上相当便利； </p>
+<p>yum   install -y  nfs-utils</p>
+<p>yum   install -y  rpcbind</p>
+<p>systemctl  start  rpcbind      启动rpc服务</p>
+<p>systemctl start  nfs-server   nfs-secure-server</p>
+<p>启动nfs服务和nfs安全传输服务</p>
+<p>systemctl enable  nfs-server  nfs-secure-server</p>
+<p>自启动</p>
+<p>firewall-cmd –permanent –add-service=nfs success</p>
+<p>配置防火墙方向nfs服务</p>
+<p>firewall-cmd –reload success</p>
+<p>首先创建共享目录   ，然后在/etc/exports配置文件中编辑配置即可</p>
+<p>mkdir   /public</p>
+<p>创建public共享目录</p>
+<p>vim  /etc/exports</p>
+<p> /public 192.168.245.0/24(ro) /protected </p>
+<p> /public 192.168.245.0/24(ro) (只读)</p>
+<p> /protected 192.168.245.0/24（rw） （读写）</p>
+<p> systemctl reload nfs  </p>
+<p> 重新加载NFS服务，使配置文件生效 </p>
+<p><strong>修改防火墙设置</strong> </p>
+<p>#firewall-cmd –permanent –add-service=samba </p>
+<p>//设置防火墙 </p>
+<p>#firewall-cmd –reload        //重新加载防火墙</p>
+<p>安装 samba 并启动 samba 服务</p>
+<p># yum install -y samba samba-client </p>
+<p>#systemctl start smb.service nmb.service</p>
+<p><strong>建立共享目录</strong> </p>
+<p>mkdir /home/company</p>
+<p><strong>创建访问账号</strong> </p>
+<p>useradd -s /sbin/nologin xzusr </p>
+<p>useradd -s /sbin/nologin gcusr </p>
+<p>useradd -s /sbin/nologin xsusr </p>
+<p>#smbpasswd -a xzusr </p>
+<p>#smbpasswd -a gcusr </p>
+<p>#smbpasswd -a xsusr</p>
+<p>-a 添加 smb 帐号；-x 删除 smb 帐号；-d 禁用 smb 帐号；-e 启用 smb 帐号</p>
+<p><strong>修改配置文件：/etc/samba/smb.conf</strong> </p>
+<p>默认情况下，Samba 已经配置为允许用户通过远程共享访问账号的主目录。 </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[company]  &#x2F;&#x2F;共享名称为 company </span><br><span class="line">comment &#x3D; company share &#x2F;&#x2F;共享注释 </span><br><span class="line">path &#x3D; &#x2F;home&#x2F;company  &#x2F;&#x2F;指定共享路径 </span><br><span class="line">browseable &#x3D; yes  &#x2F;&#x2F;所有人可见 </span><br><span class="line">guest ok &#x3D; no  &#x2F;&#x2F;拒绝匿名访问 </span><br><span class="line">writeable &#x3D; yes  &#x2F;&#x2F;支持写入数据 </span><br><span class="line">[company] </span><br><span class="line">comment &#x3D; company share </span><br><span class="line">path &#x3D; &#x2F;home&#x2F;company </span><br><span class="line">guest ok &#x3D; no  &#x2F;&#x2F;拒绝匿名访问 </span><br><span class="line">valid users&#x3D;xzusr,gcusr,xsusr &#x2F;&#x2F;允许访问的用户列表 </span><br><span class="line">write list&#x3D;xzusr &#x2F;&#x2F;允许写入的用户列表</span><br><span class="line">valid users-@tech</span><br><span class="line">write list&#x3D;@tech   @代表用户组</span><br><span class="line">systemctl restart smb nmb使更改生效</span><br><span class="line">在 linux 客户端访问测试：smbclient -U smbuser &#x2F;&#x2F;192.168.75.128&#x2F;company </span><br><span class="line">查看服务器的共享文件有哪些：smbclient -L 192.168.75.128 </span><br><span class="line">查看 smbuser 用户可以访问的共享文件：smbclient -L 192.168.75.128 -U smbuser</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>在 Linux 下访问 Windows 共享目录的配置方法</strong> </p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">（1）在 Windows xp 上设置一个共享目录：d:\myfiles </span><br><span class="line">（2）在 Linux 下安装 samba-client 客户端 </span><br><span class="line">\# yum install samba-client </span><br><span class="line">（3）安装 cifs-utils 软件包 </span><br><span class="line">\# yum install cifs-utils </span><br><span class="line">（4）在 Linux 下创建一个挂载点 </span><br><span class="line">\# mkdir &#x2F;mnt&#x2F;Windows </span><br><span class="line">（5）挂载 Windows 上的共享目录 d:\myfiles 到 Linux 下的&#x2F;mnt&#x2F;Windows 目录下 </span><br><span class="line">\# mount -t cifs -o username&#x3D;Administrator &#x2F;&#x2F;192.168.0.3&#x2F;mytest &#x2F;mnt&#x2F;Windows </span><br><span class="line">Enter password: ******** </span><br><span class="line">在&#x2F;etc&#x2F;fstab 文件中，加入该共享目录的挂载信息 </span><br><span class="line">&#x2F;&#x2F;192.168.1.123&#x2F;redhat_disk &#x2F;mnt&#x2F;Windows cifs username&#x3D;tommy,password&#x3D;111111 0 0</span><br></pre></td></tr></table></figure></div>
+
+
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-DHCP配置：" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/" class="article-date">
+  <time datetime="2020-02-03T08:29:01.315Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="配置DHCP服务器"><a href="#配置DHCP服务器" class="headerlink" title="配置DHCP服务器"></a>配置DHCP服务器</h1><h2 id="了解DHCP协议工作原理"><a href="#了解DHCP协议工作原理" class="headerlink" title="了解DHCP协议工作原理"></a>了解DHCP协议工作原理</h2><p>​    DHCP（Dynamic Host Configuration Protocol，动态主机配置协议）提供了动态配置IP地址的功能。在DHCP网络中，客户端不再需要自行输入网络参数，而是由DHCP服务器向客户端自动分配。</p>
+<p>（1）DHCP客户端在网络中搜索服务器</p>
+<p>（2）DHCP服务器向客户端响应服务</p>
+<p>（3）DHCP客户端向目标服务器发出服务请求</p>
+<p>（4）DHCP服务器向客户端提供服务</p>
+<h3 id="1、IP地址租用的过程"><a href="#1、IP地址租用的过程" class="headerlink" title="1、IP地址租用的过程"></a>1、IP地址租用的过程</h3><p>​    DHCP客户端首次启动时，会自动执行初始化过程以便从DHCP服务器获得租约，获取租约的过程大致分为四个不同的阶段</p>
+<p>（1）IP租用请求</p>
+<p>客户端发送DHCP  Discover</p>
+<p>（2）IP租用提供</p>
+<p>服务器向客户端响应DHCP服务</p>
+<p>（3）IP租用选择</p>
+<p>客户机选择IP地址</p>
+<p>（4）IP租用确认</p>
+<p>服务器确认</p>
+<h3 id="2、获取IP地址后的处理过程"><a href="#2、获取IP地址后的处理过程" class="headerlink" title="2、获取IP地址后的处理过程"></a>2、获取IP地址后的处理过程</h3><p>（1）客户端重新登录时的IP处理<br>    DHCP客户端每次重新登录网络时，不需要再发送DHCP Discover信息，而是直接发送包含前一次所分配的IP地址的DHCP Request请求信息。<br>（2）IP地址的续约<br>    DHCP的租约期限一般默认是8天，DHCP客户端必须在租约过期前对它进行续约。</p>
+<h2 id="DHCP配置："><a href="#DHCP配置：" class="headerlink" title="DHCP配置："></a>DHCP配置：</h2><h3 id="1、规划IP地址段"><a href="#1、规划IP地址段" class="headerlink" title="1、规划IP地址段"></a>1、规划IP地址段</h3><p>确定DHCP服务器应分发给客户端的IP地址范围。<br>192.168.10.0/24<br>192.168.10.100-192.168.10.200<br>为客户端确定正确的子网掩码<br>255.255.255.0<br>总经理专用地址：192.168.10.8（保留地址）<br>确定DHCP服务器不应向客户端分发的所有IP地址。<br>决定IP地址的租约期限<br>网关地址：192.168.10.254<br>DNS服务器地址：192.168.10.1</p>
+<p>网卡配置文件存放位置：/etc/sysconfig/network-scripts</p>
+<p>修改网卡配置文件：ifcfg-ens33</p>
+<p>禁用网卡：ifdown  ens33</p>
+<h3 id="2、安装DHCP服务器"><a href="#2、安装DHCP服务器" class="headerlink" title="2、安装DHCP服务器"></a>2、安装DHCP服务器</h3><p>yum install dhcp</p>
+<h3 id="3、配置DHCP的服务器"><a href="#3、配置DHCP的服务器" class="headerlink" title="3、配置DHCP的服务器"></a>3、配置DHCP的服务器</h3><p>DHCP服务的配置文件：/etc/dhcp/dhcpd.conf</p>
+<p>如果要配置DHCP需要查看样例文件参考，进行配置</p>
+<p>/usr/share/doc/dhcp*/dhcpd.conf.example</p>
+<p>做的时候先备份</p>
+<p>主配置文件：/etc/dhcp/dhcpd.conf</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">option domain-name-servers 192.168.10.1;		&#x2F;&#x2F; 设置DNS服务器选项，可放在全局部份。</span><br><span class="line">subnet 192.168.10.0 netmask  255.255.255.0 &#123;	&#x2F;&#x2F;用于定义作用域</span><br><span class="line">range 192.168.10.100  192.168.10.200;			&#x2F;&#x2F;指定当前作用域中可供分配的IP地址范围</span><br><span class="line">option routers 192.168.10.254;					&#x2F;&#x2F;指定当前作用域的网关</span><br><span class="line">default-lease-time 86400;						&#x2F;&#x2F;默认租约时间，单位为秒</span><br><span class="line">max-lease-time  172800;							&#x2F;&#x2F;最大租约时间，一般设置为默认租约时间的2倍</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>dhcpd.conf配置文件的格式如下：<br>全局参数<br>声明 {<br>    配置选项/局部参数<br>    配置选项/局部参数<br>    ……<br>}</p>
+<h4 id="保留特定的IP地址"><a href="#保留特定的IP地址" class="headerlink" title="保留特定的IP地址"></a>保留特定的IP地址</h4><p>（1）保留IP地址的作用<br>     DHCP服务器可以保留特定的IP地址给指定的客户端使用，也就是说，当这个客户端每次向DHCP服务器索取IP地址或更新租约时，DHCP服务器都会给该客户端分配相同的IP地址。</p>
+<p>（2）保留IP地址的配置</p>
+<p>Host teacher{<br>     Hardware ethernet 00:0C:29:21:98:D6;<br>     Fixed-address 192.168.10.100;<br>}</p>
+<p>“host teacher”，指定为其保留IP地址的客户端名称，名称可以随便设置，如这里为“teacher”。<br>“hardware ethernet”，指定客户端计算机的MAC地址。<br>“fixed-address”，指定对应的保留IP地址。</p>
+<h4 id="配置超级作用域"><a href="#配置超级作用域" class="headerlink" title="配置超级作用域"></a>配置超级作用域</h4><p>什么是超级作用域呢？将多个作用域组合在一起形成超级作用域</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">ddns-update-style none;</span><br><span class="line">shared-network test &#123;</span><br><span class="line">subnet 192.168.10.0 netmask 255.255.255.0 &#123;</span><br><span class="line">  range 192.168.10.100 192.168.10.200;</span><br><span class="line">  option domain-name-servers 192.168.10.1;</span><br><span class="line">  option domain-name &quot;internal.example.org&quot;;</span><br><span class="line">  option routers 192.168.10.1;</span><br><span class="line">  option broadcast-address 192.168.10.255;</span><br><span class="line">  default-lease-time 600;</span><br><span class="line">  max-lease-time 7200;</span><br><span class="line">&#125;</span><br><span class="line">subnet 192.168.0.0 netmask 255.255.255.0 &#123;</span><br><span class="line">  range 192.168.0.100 192.168.0.200;</span><br><span class="line">  option domain-name-servers 192.168.0.1;</span><br><span class="line">  option domain-name &quot;internal.example.org&quot;;</span><br><span class="line">  option routers 192.168.0.1;</span><br><span class="line">  option broadcast-address 192.168.0.255;</span><br><span class="line">  default-lease-time 600;</span><br><span class="line">  max-lease-time 7200;</span><br><span class="line">&#125;</span><br><span class="line">host web &#123;</span><br><span class="line">  hardware ethernet 00:0C:29:9D:EA:33;</span><br><span class="line">  filename &quot;vmunix.passacaglia&quot;;</span><br><span class="line">  server-name &quot;toccata.fugue.com&quot;;</span><br><span class="line">  Fixed-address 192.168.0.110;</span><br><span class="line">&#125;</span><br><span class="line">host DNS &#123;</span><br><span class="line">  hardware ethernet 00:0C:29:9D:EA:33;</span><br><span class="line">  filename &quot;vmunix.passacaglia&quot;;</span><br><span class="line">  server-name &quot;toccata.fugue.com&quot;;</span><br><span class="line">  Fixed-address 192.168.0.110;</span><br><span class="line">&#125;</span><br><span class="line">｝</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="配置DHCP中继代理服务器"><a href="#配置DHCP中继代理服务器" class="headerlink" title="配置DHCP中继代理服务器"></a>配置DHCP中继代理服务器</h4><p><img src="C:%5CUsers%5Cpzx%5CDesktop%5C%E5%9B%BE%E7%89%871.png" alt=""></p>
+<p>（1）中继代理服务器网卡地址配置<br>       eth0:  192.168.10.2<br>       eth1:  192.168.0.1<br>（2）在dhcp服务器上配置静态路由<br>ip route add 192.168.0.0/24 via 192.168.10.2<br>（3）在中继服务器上开启转发功能：vim /etc/sysctl.conf<br>      修    改：net.ipv4.ip_forward=1<br>      启用转发：sysctl -p<br>（3）在中继服务器上安装dhcp服务<br>（4）配置主配置文件<br>Subnet 192.168.10.0 netmask 255.255.255.0{<br>   Range 192.168.10.20 192.168.10.254;<br>   Option routers 192.168.10.2;<br>   Default-lease-time 86400;<br>   Max-lease-time 172800;<br>}<br>Subnet 192.168.20.0 netmask 255.255.255.0{<br>   Range 192.168.0.20 192.168.20.254;<br>   Option routers 192.16820.1;<br>   Default-lease-time 86400;<br>   Max-lease-time 172800;<br>}</p>
+<p>（5）配置中继代理： vim /etc/sysconfig/dhcrelay<br>修改：INTERFACES=“eth0 eth1”<br>     DHCPSERVERS=“192.168.10.1”<br>重启服务：service dhcrelay start</p>
+<h3 id="4-启动DHCP服务"><a href="#4-启动DHCP服务" class="headerlink" title="4.启动DHCP服务"></a>4.启动DHCP服务</h3><p>systemctl  start  dhcpd.service</p>
+<p>检查配置语法格式是否有误</p>
+<p>dhcpd -t</p>
+<h3 id="4、客户端配置"><a href="#4、客户端配置" class="headerlink" title="4、客户端配置"></a>4、客户端配置</h3><p>方式一：通过命令提示符</p>
+<p>ipconfig  /release        //释放已经获得的IP地址</p>
+<p>ipconfig  /renew        //重新申请IP地址</p>
+<p>查看所有ip信息</p>
+<p>ipconfig  /all</p>
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-磁盘的分区与挂载" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/%E7%A3%81%E7%9B%98%E7%9A%84%E5%88%86%E5%8C%BA%E4%B8%8E%E6%8C%82%E8%BD%BD/">磁盘的分区与挂载</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/%E7%A3%81%E7%9B%98%E7%9A%84%E5%88%86%E5%8C%BA%E4%B8%8E%E6%8C%82%E8%BD%BD/" class="article-date">
+  <time datetime="2020-02-03T08:28:54.704Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h2 id="磁盘的分区与挂载"><a href="#磁盘的分区与挂载" class="headerlink" title="磁盘的分区与挂载"></a>磁盘的分区与挂载</h2><h3 id="1-磁盘-硬盘）在Linux系统中的表示方法"><a href="#1-磁盘-硬盘）在Linux系统中的表示方法" class="headerlink" title="1.磁盘(硬盘）在Linux系统中的表示方法"></a>1.磁盘(硬盘）在Linux系统中的表示方法</h3><p>  IDE硬盘：hda1 hda2  hdb1 hdc1 ….<br>  SATA硬盘/SCSI/USB接口的移动盘：sda1 sda2 sdb1</p>
+<h3 id="2-硬盘分区："><a href="#2-硬盘分区：" class="headerlink" title="2.硬盘分区："></a>2.硬盘分区：</h3><p>主分区    最多只能分4个，是可以直接使用，主要用于系统盘。编号为1-4</p>
+<p>​            扩展分区  不能直接使用，必须有主分区后才能将所有剩余空间分为扩展分区，可以建立逻辑分区。1-4，除主分区外。<br>​            逻辑分区   可以直接使用，编号从5开始，不能做为系统引导盘。</p>
+<h3 id="3-磁盘分区的格式："><a href="#3-磁盘分区的格式：" class="headerlink" title="3.磁盘分区的格式："></a>3.磁盘分区的格式：</h3><p>windows 系统中的格式有 fat fat 16  fat32   分区大小也会受到限制、文件的大小会受到限制，安全性能不高。</p>
+<p>​           NTFS   支持大容量分区，支持NTFS权限设置，安全性能较高<br>​           Linux系统中的常用格式有 ext2 ext3 ext4</p>
+<h3 id="4-挂载"><a href="#4-挂载" class="headerlink" title="4.挂载"></a>4.挂载</h3><p>​    步骤一：向Linux服务器添加一块硬盘，并重启系统。<br>​    步骤二：使用命令查看系统当中的硬盘及其分区信息<br>​            ls /dev/sd*   查看/dev目录下的硬盘文件<br>​            fdisk -l   查看硬盘分区的信息<br>​    步骤三：对磁盘进行分区<br>​            fdisk 磁盘文件名<br>​             fdisk /dev/sdb   对sdb这块硬盘进行分区<br>​    步骤四：格式化磁盘分区<br>​            mkfs -t 分区格式 分区名称<br>​            mkfs -t ext4 /dev/sdb1<br>​    步骤五：挂载分区<br>​           mount -t 分区格式 设备名称  空目录名称<br>​           mount -t ext4 /dev/sdb1 /mnt/sdb1<br>​           mount -t ext4 -o rw /dev/sdb1 /mnt/sdb1<br>​           检查是否挂载成功：mount<br>​           取消挂载：umount 挂载目录的名称 （不能在挂载目录下进行）<br>​           查看已挂载分区的信息：df -hT /mnt/sdb1<br>​           使用mount命令挂载的文件系统，只是临时的，如果系统重启则需要重新挂载。<br>   步骤六：可以使用/etc/fstab文件对文件系统进行永久挂载。</p>
+<p>vim /etc/fstab</p>
+<p>  /dev/sdb1     /data     ext4     defaults     0     0 </p>
+<p>挂载光盘（光盘的设备文件名为：/dev/sr0,文件系统的类型为：iso9660)<br>          mount -t iso9660 /dev/sr0 /mnt/cdrom       </p>
+<h2 id="LVM-卷管理"><a href="#LVM-卷管理" class="headerlink" title="LVM 卷管理"></a>LVM 卷管理</h2><p>1、LVM 的概念 LVM 可以实现对磁盘的动态管理，在磁盘不用重新分区的情况下动态调整文件系统的大 小，利用 LVM 管理的文件系统可以跨越磁盘。“/boot”分区用于存放系统引导文件，不能应 用 LVM 机制。</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>物理卷管理</th>
+<th>卷组管理</th>
+<th>逻辑卷管理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scan 扫描</td>
+<td><strong>pv</strong>scan</td>
+<td><strong>vg</strong>scan</td>
+<td><strong>lv</strong>scan</td>
+</tr>
+<tr>
+<td>Create 建立</td>
+<td>pvcreate</td>
+<td>vgcreate</td>
+<td>lvcreate</td>
+</tr>
+<tr>
+<td>Display 显示</td>
+<td>pvdisplay</td>
+<td>vgdisplay</td>
+<td>lvdisplay</td>
+</tr>
+<tr>
+<td>Remove 删除</td>
+<td>pvremove</td>
+<td>vgremove</td>
+<td>lvremove</td>
+</tr>
+<tr>
+<td>Reduce 缩减</td>
+<td></td>
+<td>vgreduce</td>
+<td>lvreduce</td>
+</tr>
+<tr>
+<td>Extend 扩展</td>
+<td></td>
+<td>vgextend</td>
+<td>lvextend</td>
+</tr>
+</tbody></table>
+<h3 id="1、创建磁盘分区"><a href="#1、创建磁盘分区" class="headerlink" title="1、创建磁盘分区"></a>1、创建磁盘分区</h3><p>创建物理分区： /dev/sdb1 和 /dev/sdb5,并修改分区标记为 8e。 </p>
+<h3 id="2、创建物理卷-PV"><a href="#2、创建物理卷-PV" class="headerlink" title="2、创建物理卷 PV"></a>2、创建物理卷 PV</h3><p>然后创建物理卷 PV，用到的命令是 pvcreate </p>
+<p>（相当于图形操作中的初始化磁盘） </p>
+<p>Pvcreate /dev/sdb1 /dev/sdb5</p>
+<h3 id="3、创建卷组-VG"><a href="#3、创建卷组-VG" class="headerlink" title="3、创建卷组 VG"></a>3、创建卷组 VG</h3><p>接下来创建卷组 VG ,用到的命令是 vgcreate </p>
+<p>使用物理卷/dev/sdb1 和 /dev/sdb5 创建名为 wgroup 的卷组 </p>
+<p>vgcreate wgroup /dev/sdb1 /dev/sdb5 </p>
+<p>创建完后可以用 vgdisplay 命令查看卷组的信息 </p>
+<h3 id="4、创建逻辑卷"><a href="#4、创建逻辑卷" class="headerlink" title="4、创建逻辑卷"></a>4、创建逻辑卷</h3><p>从卷中创建逻辑卷，用到的命令是 lvcreate </p>
+<p>格式如下： </p>
+<p>lvcreate -L 容量大小 -n 逻辑卷名 卷组名 </p>
+<p>例：从 wgroup 卷组中创建名为 ftp 的容量为 19G 的逻辑卷 </p>
+<p>lvcreate -L 19G -n ftp wgroup </p>
+<h3 id="5、创建并挂载文件系统"><a href="#5、创建并挂载文件系统" class="headerlink" title="5、创建并挂载文件系统"></a>5、创建并挂载文件系统</h3><p>逻辑卷相当于一个磁盘分区，要使用它首先要将其格式化 </p>
+<p>mkfs -t ext4 <strong>/dev/wgroup/ftp</strong> </p>
+<p>然后创建挂载目录点，将逻辑卷挂载 </p>
+<p>mkdir /var/ftp </p>
+<p>挂载：mount /dev/wgroup/ftp /mnt/ftp </p>
+<p>修改/etc/fstab 文件，实现永久挂载 </p>
+<p>vim /etc/fstab </p>
+<h3 id="6、扩展逻辑空间"><a href="#6、扩展逻辑空间" class="headerlink" title="6、扩展逻辑空间"></a>6、扩展逻辑空间</h3><p>最后将第三块硬盘/dev/sdc 加入到逻辑卷中。 </p>
+<p>先将硬盘分成一个分区/dev/sdc1,并将分区标记修改为 8e </p>
+<p>然后将分区转换为物理卷：pvcreate /dev/sdc1 </p>
+<p>将物理卷/dev/sdc1 添加到卷组 wgroup 中：vgextend wgroup /dev/sdc1 </p>
+<p>扩展逻辑卷的空间：lvextend -L +10G /dev/wgroup/ftp </p>
+<p>执行 resize2fs 命令重设文件系统的大小：resize2fs /dev/wgroup/ftp </p>
+<p>再次查看文件系统/var/ftp 的空间大小，可以看到已经变成了 29GB： df -HT</p>
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-路由重分布与路径控制 策略路由 ppp认证和GRE隧道" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/%E8%B7%AF%E7%94%B1%E9%87%8D%E5%88%86%E5%B8%83%E4%B8%8E%E8%B7%AF%E5%BE%84%E6%8E%A7%E5%88%B6%20%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1%20ppp%E8%AE%A4%E8%AF%81%E5%92%8CGRE%E9%9A%A7%E9%81%93/">路由重分布与路径控制 策略路由 ppp认证和GRE隧道</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/%E8%B7%AF%E7%94%B1%E9%87%8D%E5%88%86%E5%B8%83%E4%B8%8E%E8%B7%AF%E5%BE%84%E6%8E%A7%E5%88%B6%20%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1%20ppp%E8%AE%A4%E8%AF%81%E5%92%8CGRE%E9%9A%A7%E9%81%93/" class="article-date">
+  <time datetime="2020-02-03T08:15:33.206Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="路由重分布与路径控制"><a href="#路由重分布与路径控制" class="headerlink" title="路由重分布与路径控制"></a>路由重分布与路径控制</h1><h2 id="一、路由重分布概述"><a href="#一、路由重分布概述" class="headerlink" title="一、路由重分布概述"></a>一、路由重分布概述</h2><p>路由重分布为在同一个互连网络中高效地支持多种路由协议提供了可能，执行路由重分布的路由器被称为边界路由器，因为它们位于两个或多个自治系统的边界上。</p>
+<p>路由重分布时度量标准和管理距离是必须要考虑的，在进行重分布时必须转换协议标准，使得它们兼容。种子度量值（Seed Metric)是在路由生分布时定义的，它是一条通过外部重分布进来的路由的初始度量值。路由协议默认的种子度量值如下表：</p>
+<table>
+<thead>
+<tr>
+<th>路由重分布进和路由协议</th>
+<th>默认种子度量值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RIP</td>
+<td>无限大</td>
+</tr>
+<tr>
+<td>EIGRP</td>
+<td>无限大</td>
+</tr>
+<tr>
+<td>OSPF</td>
+<td>BGP为1，其也为20</td>
+</tr>
+<tr>
+<td>IS-IS</td>
+<td>0</td>
+</tr>
+<tr>
+<td>BGP</td>
+<td>IGP的度量值</td>
+</tr>
+</tbody></table>
+<p>考虑的问题：</p>
+<p>1.路由反馈：双向重分布有可能把从一个自治系统学到的路由信息发送回该自治系统。</p>
+<p>2.路由信息的兼容：不同路由协议的度量标准是不同的</p>
+<p>3.收敛时间不一致</p>
+<h2 id="二、路径控制概述"><a href="#二、路径控制概述" class="headerlink" title="二、路径控制概述"></a>二、路径控制概述</h2><p>为了保证网络的高效运行及在路由重分布的时候避免次优路由或者路由环路，有必要对路由更新进行控制，常用的方法有被动接口、默认路由、静态路由、路由映射表、分布列表、前缀列表、偏移列表、Cisco IOS IP服务等级协议（SLA）和策略路由。在进行路由控制时，可能是多种方法进行组合。</p>
+<h3 id="1、路由映射表（Route-Map）"><a href="#1、路由映射表（Route-Map）" class="headerlink" title="1、路由映射表（Route Map）"></a><strong>1、</strong>路由映射表（Route Map）</h3><p>可以做复杂的访问控制列表，主要功能包括路由控制和策略路由等。</p>
+<h4 id="（1）定义路由映射表的格式如下："><a href="#（1）定义路由映射表的格式如下：" class="headerlink" title="（1）定义路由映射表的格式如下："></a>（1）定义路由映射表的格式如下：</h4><p><strong>定义路由映射表：</strong>route-map map-tag [permit | deny] [sequence-number]</p>
+<p><strong>条件匹配：</strong>macth（常用的匹配条件包括IP地址、接口、度量值、tag、路由类型以及数据包长度等）</p>
+<p>​     如果格式为：match ip address a b c   表示逻辑或，只要有一个条件满足即可</p>
+<p>​     如果格式为：match ip address a </p>
+<p>​                            match ip address b </p>
+<p>​                            match ip address c     表示逻辑与，必须同时满足所有条件</p>
+<h4 id="定义行为：set"><a href="#定义行为：set" class="headerlink" title="定义行为：set"></a>定义行为：set</h4><table>
+<thead>
+<tr>
+<th><strong>Set</strong>行为</th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>set ip next  hop</td>
+<td>设定数据包的下一跳地址</td>
+</tr>
+<tr>
+<td>set interface</td>
+<td>设定数据包出接口</td>
+</tr>
+<tr>
+<td>set ip default  next hop</td>
+<td>设置默认的下一跳地址，用于当路由表里没有达到目的地址路由条目的时候</td>
+</tr>
+<tr>
+<td>set ip tos</td>
+<td>设定IP数据包的TOS值</td>
+</tr>
+<tr>
+<td>set ip  precedence</td>
+<td>设定IP数据包的优先级</td>
+</tr>
+<tr>
+<td>Set metric</td>
+<td>设置路由的度量值</td>
+</tr>
+<tr>
+<td>set tag</td>
+<td>设定路由的标记值</td>
+</tr>
+</tbody></table>
+<h4 id="（2）路由映射表有如下特征"><a href="#（2）路由映射表有如下特征" class="headerlink" title="（2）路由映射表有如下特征"></a><strong>（2）路由映射表有如下特征</strong></h4><p>A.一个route map末尾默认行为是“deny any”</p>
+<p>  如执行策略路由时，没有匹配则正常转发</p>
+<p>  如路由重分时，没有匹配则被过滤掉</p>
+<p>B.一个route map可以包含多个route map陈述，从上到下被执行，如route map陈述中没有math，则匹配所有。</p>
+<p>C.序列号指定了条件执行的顺序，不写默认为10，不会自动递增</p>
+<p>D.route map中不写permit deny默认为permit</p>
+<p>E.在删除route map时，没写编号则删除整个route map</p>
+<h3 id="2、策略路由"><a href="#2、策略路由" class="headerlink" title="2、策略路由"></a><strong>2、</strong>策略路由</h3><p>策略路由提供了一种根据网络管理者制定的策略来进行数据包转发的机制。基于策略的路由比传统路由能力更强，使用灵活，它使网络管理者不仅能够根据目的地址，而且能够根据协议类型、报文大小、应用或IP源地址来选择转发路径。策略由路由映射表来定义。</p>
+<h2 id="三、路由重分布实验"><a href="#三、路由重分布实验" class="headerlink" title="三、路由重分布实验"></a><strong>三、</strong>路由重分布实验</h2><p><strong>实验目的：</strong></p>
+<p>种子度量值的配置</p>
+<p>路由重分布参数的含义</p>
+<p>静态路由重分布</p>
+<p>直连路由重分布</p>
+<p>RIP与EIGRP的重分布</p>
+<p>EIGRP和OSPF的重分布</p>
+<p>重分布路由的查看和调试</p>
+<h3 id="实验步骤："><a href="#实验步骤：" class="headerlink" title="实验步骤："></a><strong>实验步骤：</strong></h3><p>1、配置路由协议 </p>
+<p>2、配置路由重分布与路由映射表</p>
+<p>  要求将172.16.0.0/172.16.0.2偶数重分至OSPF类型2，metric值为200</p>
+<p>要求将172.16.0.1/172.16.0.3偶数重分至OSPF类型1，metric值为100</p>
+<h3 id="策略路由"><a href="#策略路由" class="headerlink" title="策略路由"></a><strong>策略路由</strong></h3><p>策略路由提供了一种根据网络管理者制定的策略来进行数据包转发的机制。基于策略的路由比传统路由能力更强，使用更灵活，它使用网络管理者不仅能够根据目的地址，而且能够根据协议类型、报文大小、应用或IP源地址来选择转发路径。策略由路由映射表来定义。</p>
+<h4 id="实验一、基于源IP地址的策略路由配置"><a href="#实验一、基于源IP地址的策略路由配置" class="headerlink" title="实验一、基于源IP地址的策略路由配置"></a><strong>实验一、基于源IP地址的策略路由配置</strong></h4><p><strong>实验目的：</strong></p>
+<p>1、用route-map定义路由策略。</p>
+<p>2、在接口下应用路由策略。</p>
+<p>3、基于源IP地址的策略路由的配置和调试。</p>
+<p><strong>实验步骤：</strong></p>
+<p>在路由器R1的f0/0接口应用IP策略路由CCNA，使得从主机PC2来的数据设置一跳地址为：172.16.12.2；从主机PC3来的数据设置下一跳地址为：172.16.21.2，所有其他的数据包正常转发，整个网络运行EIGRP路由协议。</p>
+<p><strong>配置ACL</strong></p>
+<p>R1(config)#access-list 1 permit 172.16.1.2</p>
+<p>R1(config)#access-list 2 permit 172.16.1.3</p>
+<p><strong>配置路由映射表</strong></p>
+<p>R1(config)#route-map CCNA permit 10</p>
+<p>R1(config-route-map)#match ip address 1</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.12.2</p>
+<p>R1(config-route-map)#exit</p>
+<p>R1(config)#route-map CCNA permit 20</p>
+<p>R1(config-route-map)#match ip address 2</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.21.2</p>
+<p><strong>应用策略路由</strong></p>
+<p>R1(config)#int f0/0</p>
+<p>R1(config-if)#ip policy route-map CCNA</p>
+<p><strong>实验调试：</strong></p>
+<p><strong>1、</strong>查看路由路径</p>
+<p>PC2#traceroute 172.16.2.2</p>
+<p>PC3#traceroute 172.16.2.2</p>
+<p><strong>2、</strong>在R1上显示调试信息</p>
+<p>R1#debug ip policy</p>
+<p>PC2：ping 172.16.2.2 </p>
+<p>PC6:ping 172.16.2.2</p>
+<p><strong>3</strong>、显示在哪些接口上应用了策略路由</p>
+<p>R1#sh ip policy</p>
+<p><strong>4</strong>、显示定义的所有路由策略及路由策略匹配的情况</p>
+<h4 id="实验二、基于数据包长度的策略路由配置"><a href="#实验二、基于数据包长度的策略路由配置" class="headerlink" title="实验二、基于数据包长度的策略路由配置"></a><strong>实验二、基于数据包长度的策略路由配置</strong></h4><p><strong>实验目的：</strong></p>
+<p>1、用route-map定义路由策略。</p>
+<p>2、在接口下应用路由策略。</p>
+<p>3、基于数据包长度的策略路由的配置和调试。</p>
+<p><strong>实验拓朴：</strong></p>
+<p><strong>实验步骤：</strong></p>
+<p>在R1的f0/0接口应用IP策略路由CCNP，使得对大小为“64-100”字节的数据包设置出接口为s1/0;数据包大小“101-100”字节的数据包设置出接口为“f0/1”,所有其他的数据包正常转发，整个网络运行EIGRP路由协议。</p>
+<p><strong>配置路由映射表</strong></p>
+<p>R1(config)#route-map CCNP permit 10</p>
+<p>R1(config-route-map)#match length 64 100</p>
+<p>R1(config-route-map)#set interface s1/0</p>
+<p>R1(config)#route-map CCNP permit 20</p>
+<p>R1(config-route-map)#match length 101 1000</p>
+<p>R1(config-route-map)#set interface f0/1</p>
+<p><strong>应用策略路由</strong></p>
+<p>R1(config)#int f0/0</p>
+<p>R1(config-if)#ip policy route-map CCNP</p>
+<p>R1(config-if)#exit</p>
+<p>R1(config)#ip local policy route-map CCNP</p>
+<p><strong>实验调试：</strong></p>
+<p><strong>1.</strong>在主机上执行扩展ping命令，在R1上显示调试信息。</p>
+<p>PC2：ping 172.16.2.2 repeat 1 size 90</p>
+<p>PC2：ping 172.16.2.2 repeat 1 size 300</p>
+<p>PC2：ping 172.16.2.2 repeat 1 size 1200</p>
+<p><strong>2</strong>、显示在哪些接口上应用了策略路由</p>
+<p>R1#sh ip policy</p>
+<p><strong>3</strong>、显示定义的所有路由策略及路由策略匹配的情况</p>
+<p>R1#sh ip route-map CCNP</p>
+<h4 id="实验三、基于应用的策略路由配置"><a href="#实验三、基于应用的策略路由配置" class="headerlink" title="实验三、基于应用的策略路由配置"></a><strong>实验三、基于应用的策略路由配置</strong></h4><p><strong>实验目的：</strong></p>
+<p>1、用route-map定义路由策略。</p>
+<p>2、在接口下应用路由策略。</p>
+<p>3、基于数据包长度的策略路由的配置和调试。</p>
+<p><strong>实验步骤：</strong></p>
+<p>在R1的f0/0接口应用IP策略路由CCIE，使得对HTTP数据包设置一跳地址为：172.16.12.2，并且设置IP数据包优先级为”flash”,为telnet数据包设置下一跳地址为：172.16.21.2，并且设置IP数据包优先级为：critical，所有其他的数据包正常转发，整个路由协议运行EIGRP。</p>
+<p><strong>配置R2的http与telnet访问</strong></p>
+<p> R2(config)#ip http server</p>
+<p>R2(config)#line vty 0 4</p>
+<p>R2(config-line)#no login</p>
+<p>R2(config-line)#privilege level 15</p>
+<p><strong>配置扩展ACL</strong></p>
+<p>R1(config)#ip access-list extended HTTP</p>
+<p>R1(config-ext-nacl)#permit tcp any any eq 80</p>
+<p>R1(config-ext-nacl)#exit</p>
+<p>R1(config)#ip access-list extended TELNET</p>
+<p>R1(config-ext-nacl)#permit tcp any any eq 23</p>
+<p><strong>配置路由映射表</strong></p>
+<p>R1(config)#route-map CCIE permit 10</p>
+<p>R1(config-route-map)#match ip address HTTP</p>
+<p>R1(config-route-map)#set ip precedence flash</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.12.2</p>
+<p>R1(config)#route-map CCIE permit 20</p>
+<p>R1(config-route-map)#match ip address TELNET</p>
+<p>R1(config-route-map)#set ip precedence critical</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.21.2</p>
+<p><strong>应用路由映射表</strong></p>
+<p>R1(config)#int f0/0</p>
+<p>R1(config-if)#ip policy route-map CCIE</p>
+<p>R1(config)#ip local policy route-map CCIE</p>
+<h2 id="策略路由实验："><a href="#策略路由实验：" class="headerlink" title="策略路由实验："></a><strong>策略路由实验：</strong></h2><p>某学校网络拓朴图如右图，拥有电信、联通两条出口线路，内网分为宿舍区和教学区，分别属于lvan10和vlan20。通过策略路由配置实现以下要求：</p>
+<p>1、宿舍区访问互联网使用电信出口，教学区使用联通出口。</p>
+<p>2、任何一条链路故障，能够自动切换。</p>
+<p>3、宿舍区和教学区均使用路由器出口地址PAT。</p>
+<p><strong>实验步骤：</strong></p>
+<p>1、配置外部网络协议为rip2</p>
+<p>2、配置内部网络协议为ospf</p>
+<p>3、配置ACL</p>
+<p>4、配置路由策略</p>
+<p>5、配置NAT</p>
+<p><strong>配置一：能实现宿舍区访问互联网使用电信出口，</strong></p>
+<p><strong>教学区使用联通出口。但不能实现自动切换</strong></p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">R1(config)#access-list 10 permit 192.168.10.0 0.0.0.255</span><br><span class="line">R1(config)#access-list 20 permit 192.168.20.0 0.0.0.255</span><br><span class="line">R1(config)#route-map dianxin permit 10</span><br><span class="line">R1(config-route-map)#match int s2&#x2F;0</span><br><span class="line">R1(config)#route-map liantong permit 20</span><br><span class="line">R1(config-route-map)#match int s2&#x2F;1</span><br><span class="line">R1(config)#ip nat inside source route-map dianxin int s2&#x2F;0 overload</span><br><span class="line">R1(config)#ip nat inside source route-map liantong int s2&#x2F;1 overload</span><br><span class="line">R1(config)#int s2&#x2F;0</span><br><span class="line">R1(config-if)#ip nat outside</span><br><span class="line">R1(config)#int s2&#x2F;1</span><br><span class="line">R1(config-if)#ip nat outside</span><br><span class="line">R1(config)#int f0&#x2F;0</span><br><span class="line">R1(config-if)#ip nat inside</span><br><span class="line">R1(config)#int f1&#x2F;0</span><br><span class="line">R1(config-if)#ip nat inside</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>配置二：能实现宿舍区访问互联网使用电信出口，</strong></p>
+<p><strong>教学区使用联通出口。并能实现自动切换</strong></p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">R1(config)#access-list 10 permit 192.168.10.0 0.0.0.255</span><br><span class="line">R1(config)#access-list 20 permit 192.168.20.0 0.0.0.255</span><br><span class="line">R1(config)#route-map fenliu permit 10</span><br><span class="line">R1(config-route-map)#match ip add 10</span><br><span class="line">R1(config-route-map)#set ip next-hop 50.1.1.2 60.1.1.2</span><br><span class="line">R1(config)#route-map fenliu permit 20</span><br><span class="line">R1(config-route-map)#match ip add 20</span><br><span class="line">R1(config-route-map)#set ip next-hop 60.1.1.2 50.1.1.2</span><br><span class="line">R1(config)#int e1&#x2F;0</span><br><span class="line">R1(config-if)#ip policy route-map fenliu</span><br><span class="line">R1(config)#int e1&#x2F;1</span><br><span class="line">R1(config-if)#ip policy route-map fenliu</span><br></pre></td></tr></table></figure></div>
+
+
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-ACL访问控制列表" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/ACL%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%88%97%E8%A1%A8/">ACL访问控制列表</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/ACL%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%88%97%E8%A1%A8/" class="article-date">
+  <time datetime="2020-02-03T08:15:33.196Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="ACL访问控制列表"><a href="#ACL访问控制列表" class="headerlink" title="ACL访问控制列表"></a>ACL访问控制列表</h1><p>在第三层，对数据包进行过滤</p>
+<p>ACL：规则集</p>
+<h2 id="两种类型"><a href="#两种类型" class="headerlink" title="两种类型"></a>两种类型</h2><p>标准ACL：检查源地址，通常允许或拒绝的是完整的协议。</p>
+<p>扩展ACL：检查源地址和目的地址，通常允许或拒绝的是某个特定的协议。</p>
+<h2 id="两个方向"><a href="#两个方向" class="headerlink" title="两个方向"></a>两个方向</h2><p>in：进站</p>
+<p>out：出站</p>
+<p>标准ACL：通常应用到离目标最近的端口。</p>
+<p>扩展ACL：通常应用到离源最近的端口。</p>
+<p>看数据包的流向，方向为进（in），方向为出（out）。</p>
+<h2 id="两个动作"><a href="#两个动作" class="headerlink" title="两个动作"></a>两个动作</h2><p>deny：拒绝</p>
+<p>permit：允许</p>
+<p>两种命名方式：</p>
+<p>名称方式：</p>
+<p>standard：（标准ACL）</p>
+<p>extended：（扩展ACL）</p>
+<p>编号命名：</p>
+<p>标准ACL：1-99</p>
+<p>扩展ACL：100-199，2000-2699</p>
+<p>默认拒绝所有的。</p>
+<p>执行顺序：从上至下，一旦匹配，不再往下执行。</p>
+<h2 id="反掩码"><a href="#反掩码" class="headerlink" title="反掩码"></a>反掩码</h2><p>不确定有没有划分子网掩码</p>
+<p>255.255.255.255-255.255.255.0（子网掩码）=0.0.0.255</p>
+<p>前三个0代表精确匹配</p>
+<h2 id="案例一：拒绝学生宿舍访问财务室网络。"><a href="#案例一：拒绝学生宿舍访问财务室网络。" class="headerlink" title="案例一：拒绝学生宿舍访问财务室网络。"></a>案例一：拒绝学生宿舍访问财务室网络。</h2><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">判断是用标准ACL还是用扩展ACL？</span><br><span class="line">       根据要求意思是拒绝整个学生宿舍的网络，就应该用标准ACL。</span><br><span class="line">       搞清楚ACL应该做在哪个路由器上？标准ACL应做在离目标最近的端口。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      第一步：设置ACL规则（名称方式命名）</span><br><span class="line">             R2(config)#ip access-list standard ACL1    做一个标准ACL名字叫ACL1</span><br><span class="line">             R2(config-std-nacl)#deny 192.168.10.0 0.0.0.255   拒绝学生宿舍网络，用反掩码精确匹配</span><br><span class="line">             如何查看？R2#sh ip access-lists</span><br><span class="line">      第二步：应用ACL规则（思考应用到哪个端口？）</span><br><span class="line">             标准ACL应做在离目标最近的端口，方向为out。</span><br><span class="line">             R2(config)#int f0&#x2F;0</span><br><span class="line">             R2(config-if)#ip access-group ACL1 out</span><br><span class="line">             R2#sh running-config</span><br><span class="line">      第三步：验证ACL是否正确？</span><br><span class="line"></span><br><span class="line">      如果要修改ACL？</span><br><span class="line">             R2(config)#ip access-list standard ACL1   进入到ACL规则集</span><br><span class="line">             R2(config-std-nacl)#permit any     添加规则</span><br><span class="line">             R2(config-std-nacl)#no 20      删除编号为20的规则</span><br><span class="line">             R2(config)#no ip access-list standard ACL1   删除名为ACL1的规则集</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      如果用编号方式做ACL规则？</span><br><span class="line">             R2(config)#access-list 10 deny 192.168.10.0 0.0.0.255</span><br><span class="line">             R2(config)#access-list 10 permit any</span><br><span class="line">             删除规则：R2(config)#ip access-list standard 10</span><br><span class="line">                      R2(config-std-nacl)#no 20</span><br><span class="line">             删除整个规则集：R2(config)#no access-list 10</span><br><span class="line"></span><br><span class="line">             R2(config)#int f0&#x2F;0</span><br><span class="line">             R2(config-if)#ip access-group 10 out</span><br></pre></td></tr></table></figure></div>
+
+<p>eq等于</p>
+<p>gt大于</p>
+<p>lt小于</p>
+<p>neg不等于</p>
+<p>range包含</p>
+<h2 id="案例二：拒绝学生宿舍访问www服务。"><a href="#案例二：拒绝学生宿舍访问www服务。" class="headerlink" title="案例二：拒绝学生宿舍访问www服务。"></a>案例二：拒绝学生宿舍访问www服务。</h2><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">什么是www服务？万维网服务，提供WEB页面访问，协议是：http  默认端口号：80</span><br><span class="line"></span><br><span class="line">1.配置网http服务：开启服务--做网页</span><br><span class="line">2.配置DNS服务：开启服务--做A记录</span><br><span class="line">              配置DNS地址</span><br><span class="line">              测试：在客户端计算机打开命令提示符：nslookup   </span><br><span class="line"></span><br><span class="line">3、根据要求，应该用什么类型的ACL？</span><br><span class="line">   使用扩展ACL，应用在离源最近的端口,方向为in</span><br><span class="line">   第一步：配置ACL规则</span><br><span class="line">          R1(config)#access-list 100 deny  tcp 192.168.10.0 0.0.0.255 host 192.168.100.1 eq www</span><br><span class="line">          R1(config)#access-list 100 permit ip any any </span><br><span class="line"></span><br><span class="line">   第二步：应用到端口（应用在离源最近的端口，方向为in）</span><br><span class="line">          R1(config-if)#ip access-group 100 in</span><br><span class="line"></span><br><span class="line">   第三步：测试：</span><br><span class="line">          假设测试失败，怎么检查？</span><br><span class="line">           首先检查：sh ip acc</span><br><span class="line">           其次检查：是否正确的应用到了端口  sh run</span><br></pre></td></tr></table></figure></div>
+
+<p>ARP:地址解析协议</p>
+<h2 id="案例三：拒绝学生宿舍ping服务器，但可以访问网站。"><a href="#案例三：拒绝学生宿舍ping服务器，但可以访问网站。" class="headerlink" title="案例三：拒绝学生宿舍ping服务器，但可以访问网站。"></a>案例三：拒绝学生宿舍ping服务器，但可以访问网站。</h2><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ping服务器使用的是什么协议？ICMP</span><br><span class="line">        访问网站使用的是哪个协议？http   tcp:80</span><br><span class="line"></span><br><span class="line">        根据要求需要使用什么类型的ACL？</span><br><span class="line">        扩展ACL（应用在离源最近的端口，方向为in)</span><br><span class="line"></span><br><span class="line">        第一步：配置ACL：使用编号方式</span><br><span class="line">        R1(config)#access-list 100 deny icmp 192.168.10.0 0.0.0.255 host 192.168.100.1 echo</span><br><span class="line">        R1(config)#access-list 100 permit ip any any </span><br><span class="line">        第二步：将ACL应用到端口（应用在离源最近的端口，方向为in)</span><br><span class="line">        R1(config-if)#ip access-group 100 in</span><br><span class="line">        第三步：验证配置是否正确？</span><br><span class="line">               假设测试失败，怎么检查？</span><br><span class="line">                   首先检查：sh ip acc</span><br><span class="line">                   其次检查：是否正确的应用到了端口  sh run</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="案例四：学生宿舍不可以ping服务器，不能用www-gxa-com访问网站，但可以用地址访问网站。"><a href="#案例四：学生宿舍不可以ping服务器，不能用www-gxa-com访问网站，但可以用地址访问网站。" class="headerlink" title="案例四：学生宿舍不可以ping服务器，不能用www.gxa.com访问网站，但可以用地址访问网站。"></a>案例四：学生宿舍不可以ping服务器，不能用<a href="http://www.gxa.com访问网站，但可以用地址访问网站。" target="_blank" rel="noopener">www.gxa.com访问网站，但可以用地址访问网站。</a></h2><div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">R1(config)#access-list 120 deny icmp 192.168.10.0 0.0.0.255 host 192.168.100.1 echo</span><br><span class="line">R1(config)#access-list 120 deny udp 192.168.10.0 0.0.0.255 host 192.168.100.1 eq domain</span><br><span class="line">R1(config)#access-list 120 permit ip any any</span><br><span class="line">R1(config)#int f0&#x2F;0</span><br><span class="line">R1(config-if)#ip access-group 110 in</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="案例五：服务器提供DNS-WEB-FTP服务"><a href="#案例五：服务器提供DNS-WEB-FTP服务" class="headerlink" title="案例五：服务器提供DNS\WEB\FTP服务"></a>案例五：服务器提供DNS\WEB\FTP服务</h2><p>学生宿舍：可以访问行政楼，不允许访问财务室，只允许访问服务器的www服务（可以使用域名访问）。</p>
+<p>行政楼：可以访问学生宿舍，不允许访问财务室，只允许访问服务器的www服务（可以使用域名访问）和ftp。</p>
+<p>财务室：不能访问学生宿舍和行政楼，访问服务器不受限制。</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">R2(config)#access-list 100 permit tcp 192.168.10.0 0.0.0.255 host 192.168.100.1 eq www</span><br><span class="line">R2(config)#access-list 100 permit udp 192.168.10.0 0.0.0.255 host 192.168.100.1 eq domain </span><br><span class="line">R2(config)#access-list 100 permit tcp 192.168.20.0 0.0.0.255 host 192.168.100.1 eq www</span><br><span class="line">R2(config)#access-list 100 permit udp 192.168.20.0 0.0.0.255 host 192.168.100.1 eq domain </span><br><span class="line">R2(config)#access-list 100 permit tcp 192.168.20.0 0.0.0.255 host 192.168.100.1 eq ftp </span><br><span class="line">R2(config-ext-nacl)#permit ip 192.168.30.0 0.0.0.255 any </span><br><span class="line">R2(config)#int f0&#x2F;1</span><br><span class="line">R2(config-if)#ip access-group 100 out</span><br><span class="line">R2(config)#access-list 10 permit 192.168.30.0 0.0.0.255</span><br><span class="line">R2(config)#access-list 10 permit 192.168.100.0 0.0.0.255</span><br><span class="line">R2(config)#int f0&#x2F;0</span><br><span class="line">R2(config-if)#ip access-group 10 out</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="基于时间ACL的配置"><a href="#基于时间ACL的配置" class="headerlink" title="基于时间ACL的配置"></a>基于时间ACL的配置</h2><p>基于时间的 ACL 功能类似于扩展 ACL，但它允许根据时间执行访问控制。要使用基于时间的 ACL，您需要创建一个时间范围，指定一周和一天内的时段。您可以为时间范围命名，然后对相应功能应用此范围。时间限制会应用到该功能本身.</p>
+<p>基于时间的ACL中配置时间的方式</p>
+<p>绝对时间：</p>
+<p>(config-range)#absolute start{hh:mm data month year} end {hh:mm data month year}</p>
+<p>周期时间：</p>
+<p>(config-range)#periodic{星期范围} {时间} to {星期范围} {时间}</p>
+<p>星期范围：Monday、Tuesday、Wendnesday、Thursday、Friday、Saturday、Sundday<br>daily(每天)、weekday(每周)、weekend(周末)</p>
+<p>time-range用来定义时间范围的命令</p>
+<p>time-range-name时间范围名称，用来标识时间范围，以便于在后面的访问列表中引用</p>
+<p>periodic主要是以星期为参数来定义时间范围的一个命令</p>
+<p>Router(config-time-range)#periodic days-of-the week hh:mm to [days-of-the week] hh:mm</p>
+<p>show time-range查看定义的时间范围</p>
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-IP地址" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/IP%E5%9C%B0%E5%9D%80/">IP地址</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/IP%E5%9C%B0%E5%9D%80/" class="article-date">
+  <time datetime="2020-02-03T08:15:33.195Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h1><h2 id="IPV4编址方案"><a href="#IPV4编址方案" class="headerlink" title="IPV4编址方案"></a>IPV4编址方案</h2><p>IP地址由32位二进制数组成，这些位被划分为4个字节，中间用“.”号隔开，每组8位，以十进制数形式表示。分为网络地址和主机地址两个部分。</p>
+<p>二进制数转十进制数：2^0x0+2^1x0</p>
+<p>128 64 32 16 8 4 2 1<br>IPV4一共有：2^32  大约40多亿个地址<br>IP地址在网络中是唯一的，不能重复。<br>对地址进行分类<br>分共有地址、私有地址、保留地址<br>NAT网络地址转换</p>
+<h2 id="IP地址分类"><a href="#IP地址分类" class="headerlink" title="IP地址分类"></a>IP地址分类</h2><h3 id="A类网络地址范围"><a href="#A类网络地址范围" class="headerlink" title="A类网络地址范围"></a>A类网络地址范围</h3><p>第一个字节的第一位必须是0，第一个字节的取值为0-127<br>即:0xxxxxxx  取值范围是：00000000-01111111 （0-127）<br>斜杆表示：1.1.1.1/8 网络号：8位 255.0.0.0<br>网络地址（号）（表示地址具体在哪个网络）:1.0.0.0<br>广播地址：1.255.255.255<br>在这个网络中有多少个地址呢？2^24<br>有效地址（可以配置给主机的地址）：2^24-2（减掉网络地址和广播地址）<br>子网掩码为：255.0.0.0<br>1.0.0.1到1.255.255.254</p>
+<h3 id="B类网络地址范围"><a href="#B类网络地址范围" class="headerlink" title="B类网络地址范围"></a>B类网络地址范围</h3><p>第一个字节的第一位必须是1，第二位必须是0，第一个字节的取值为128-191<br>即：10000000 取值范围是：10000000-10111111 （128-191）</p>
+<p>181.1.1.1/16<br>网络地址（号）（表示地址具体在哪个网络）:181.1.0.0<br>广播地址：181.1.255.255<br>有效地址（可以配置给主机的地址）：2^16-2（减掉网络地址和广播地址）<br>181.1.0.1-181.1.255.254</p>
+<h3 id="C类网络地址范围"><a href="#C类网络地址范围" class="headerlink" title="C类网络地址范围"></a>C类网络地址范围</h3><p>第一个字节的第一位必须是1，第三位必须是0，第一个字节的取值为192-225<br>192.168.1.1/24<br>网络地址（号）（表示地址具体在哪个网络）:192.168.1.0<br>广播地址：192.168.1.255</p>
+<p>有效地址（可以配置给主机的地址）：2^8-2 （减掉网络地址和广播地址）<br>可用地址：192.168.1.1-192.168.1.254</p>
+<p>D类网络地址：第一个字节为224-239，用做组播地址。</p>
+<p>E类网络地址：第一个字节为240-255，用于科学用途。</p>
+<p>网络地址全为0     表示当前网络或网段<br>网络地址全为1     表示所有网络<br>地址127.0.0.1      保留用于环回测试<br>节点地址全为0      表示网络地址或指定网络中的任何主机<br>节点地址全为1      到当前网络中所有节点的广播，有时称为“全1广播”或限定, 广播即：255.255.255.255  </p>
+<h2 id="私有地址"><a href="#私有地址" class="headerlink" title="私有地址"></a>私有地址</h2><p>A类    10.0.0.0-10.255.255.255<br>B类    172.16.0.0-172.31.255.255<br>C类    192.168.0.0-192.168.255.255</p>
+<h2 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h2><p>子网划分：将大的网络划分成若干个小网络，尽量减少广播风暴，提高网络效率。</p>
+<p>如何进行子网划分呢？<br>C类IP地址：192.168.1.0/24  网络地址:192.168.1.0<br>广播地址：192.168.1.255 可用地址：1.1-1.254</p>
+<p>案例1</p>
+<p>向主机为借位<br>如果借1位，那么划分了几个网呢？2^1个网络<br>划分成了哪两个网络呢？<br>192.168.1.0/25<br>子网掩码值是多少？255.255.255.128<br>块大小（每个小网络的地址总数）：256-128=128<br>分成了那些网络呢？</p>
+<p>192.168.1.0/25<br>网络号：192.168.1.0/25<br>广播地址（是这个网络中的最后一个地址）：192.168.1.127/25<br>可用地址范围:192.168.1.1-192.168.1.126</p>
+<p>192.168.1.128/25<br>网络号：192.168.1.128/25<br>广播地址（是这个网络中的最后一个地址）：192.168.1.255/25<br>可用地址范围:192.168.1.129-192.168.1.254</p>
+<p>案例2</p>
+<p>192.168.10.0 向主机位借2位<br>这个一个C类地址，默认子网掩码值是：255.255.255.0/24<br>向主机位借2位后，划分了几个子网？2^2=4个<br>现在子网掩码值是：255.255.255.192<br>块大小？256-192=64<br>有哪些网络呢？</p>
+<p>192.168.10.0/26<br>网络号：192.168.10.0/26<br>广播号：192.168.10.63/26<br>可用地址范围：192.168.10.1-192.168.10.62</p>
+<p>192.168.10.64/26<br>网络号：192.168.10.64/26<br>广播号：192.168.10.127/26<br>可用地址范围：192.168.10.65-192.168.10.126</p>
+<p>192.168.10.128/26</p>
+<p>192.168.10.192/26</p>
+<p>练习：192.168.2.91/30（最多到30）是哪个网络的地址？<br>向主机位借了6位<br>块大小：256-252=4<br>子网掩码值：255.255.255.252<br>192.168.2.88/30<br>可用地址范围：192.168.2.89-90<br>网络号：192.168.2.88/30<br>广播号：192.168.2.91/30</p>
+<p>/30    255.255.255.252<br>/29    255.255.255.248<br>/28    255.255.255.240<br>/27    255.255.255.224<br>/26    255.255.255.192<br>/25    255.255.255.128</p>
+<p>B类网络子网划分：<br>181.1.1.1<br>这个一个B类地址，默认子网掩码值是：255.255.0.0 /16<br>如果要进行子网划分，就向主机位借位。<br>假设借2位，那么子网掩码值是：255.255.192.0/18<br>划分了几个网络？2^2=4<br>块大小？256-192=64<br>有那些网络呢？<br>网络号是：181.1.0.0/18<br>广播号：181.1.63.255<br>可用地址：181.1.0.1-181.1.63.254</p>
+<p>181.1.64.0<br>181.1.128.0<br>181.1.192.0</p>
+<p>A类地址：12.1.1.1 这是一个A类地址，默认子网掩码值是：255.0.0.0/8<br>假设借2位，那么子网掩码值是：255.192.0.0/10<br>有那些网络？<br>12.0.0.0<br>网络号是：12.0.0.0/10<br>广播号：12.63.255.255<br>可用地址：12.0.0.1-12.63.255.254<br>12.64.0.0<br>12.128.0.0<br>12.192.0.0</p>
+<h2 id="变长子网掩码"><a href="#变长子网掩码" class="headerlink" title="变长子网掩码"></a>变长子网掩码</h2><p>使用长度不同的子网掩码将网络划分成多个子网，适用于不同类型的网络设计，称为VLSM组网。</p>
+<p>分类路由选择：RIP1  IGRP协议<br>   无类路由选择：RIP2　EIGRP　　OSPF等协议</p>
+<h3 id="有类路由"><a href="#有类路由" class="headerlink" title="有类路由"></a>有类路由</h3><p>汇总以后地址是标准的A B C类地址掩码 即 255.0.0.0 255.255.0.0 255.255.255.0 (有类路由里 大类网络中 子网码必须一致 这样叫做有类路由 因为有类路由协议不传递子网码信息)</p>
+<h3 id="无类路由"><a href="#无类路由" class="headerlink" title="无类路由"></a>无类路由</h3><p>汇总以后地址是无类的比如 172.16.12.0/16 - 172.16.15.0/16 汇总以后的地址是 172.16.12.0/20 子码 不属于 A B C 3个类别(无类路由是相反的 他传递子网信息所有大类网络中可以使用不同的子网码)</p>
+<h2 id="地址汇总"><a href="#地址汇总" class="headerlink" title="地址汇总"></a>地址汇总</h2><p>汇总：也叫路由聚合，让路由选择协议能够用一个地址通告众多网络。旨在缩小路由器中路由选择表的规模，以节省内存，并缩短IP对IP路由选择表进行分析以找出前往远程网络的所需时间。</p>
+<p>以太网MAC地址<br>是由48位二进制数组成的，以十六进制数表示。前24位称为OUI（组织唯一标识符），后24位是厂商对网卡的唯一编号，第8位如果是0表示单播地址，是1表示组播地址。</p>
+<p>Switch#show version<br>Base ethernet MAC Address       : 0060.47BE.D810</p>
+<p>查看MAC地址表：<br>show  mac-address-table </p>
+<p>以太网帧格式<br>前导码（7字节）<br>帧起始（1字节）<br>目的地址（6字节）<br>源地址（6字节）<br>类型（2字节）<br>数据 （46~1500字节）<br>帧序列检测（4字节）</p>
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+    <article id="post-交换机工作原理及VLAN" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/03/%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8AVLAN/">交换机工作原理及VLAN</a>
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8AVLAN/" class="article-date">
+  <time datetime="2020-02-03T08:15:33.194Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="交换机工作原理及VLAN"><a href="#交换机工作原理及VLAN" class="headerlink" title="交换机工作原理及VLAN"></a>交换机工作原理及VLAN</h1><p>工作在数据链路层。</p>
+<p>作用：分割冲突域，实现全双工通信，存储，过滤转发。</p>
+<h2 id="MAC子层与LLC子层"><a href="#MAC子层与LLC子层" class="headerlink" title="MAC子层与LLC子层"></a>MAC子层与LLC子层</h2><p>介质访问控制（MAC）子层（802.3）<br>将上层交下来的数据封装成帧进行发送(接收时迚行相反的过程，将帧拆卸)；<br>实现和维护介质访访问控制协议，例如CSMA/CD；<br>比特差错检测；<br>MAC帧的寻址，即MAC帧由哪个站（源站）収出，被哪个站／哪些站接收（目的站）。</p>
+<p>逻辑链路控制（LLC）子层（802.2）<br>建立和释放数据链路层的逻辑连接；<br>提供与上层的接口；<br>给帧加上序号。</p>
+<h2 id="交换机的转发原理"><a href="#交换机的转发原理" class="headerlink" title="交换机的转发原理"></a>交换机的转发原理</h2><p>转发<br>   交换机根据MAC地址表单播转数据帧<br>学习<br>   MAC地址表是交换机通过学习接收的数据帧的源MAC地址来形成的<br>广播<br>   如果目标地址在MAC地址表中没有，交换机就向除接收到该数据帧的端口外的其他所有端口广播该数据帧<br>更新<br>   交换机MAC地址表的老时间是300秒<br>   交换机如果发现一个帧的入端口和MAC地址表中源MAC地址的所在端口不同，交换机将MAC地址重新学习到新的端口。</p>
+<p>单工,半双工与全双工<br>单工：只有一个信道，传输方向只能是单向的<br>半双工：只有一个信道，在同一时刻，只能是单向传输<br>全双工：双信道，同时可以有双向数据传输</p>
+<p>冲突与冲突域<br>集线器所有端口在一个冲突域，如果冲突过多，则传输效率就会降低<br>交换机分割冲突域，因为一个接口一个冲突域</p>
+<h2 id="以太网MAC地址"><a href="#以太网MAC地址" class="headerlink" title="以太网MAC地址"></a>以太网MAC地址</h2><p>以太网地址用来识别一个以太网上的某个单独的设备或一组设备<br>   MAC地址是由48位二进制数组成的，以十六进制数表示。前24位称为OUI（组织唯一标识符），后24位是厂商对网卡的唯一编号，第8位如果是0表示单播地址，是1表示组播地址。</p>
+<p>交换机有一个基本MAC地址，每一个端口对应一个MAC地址.</p>
+<h2 id="交换机的配置"><a href="#交换机的配置" class="headerlink" title="交换机的配置"></a>交换机的配置</h2><p>交换机的所有端口默认情况下都在一个网络（vlan1），所以只要将电脑连接到交换机，并配置同一个网络内的地址，这样就组成了一个局域网。所以这样会形成广播风暴。<br>交换机的分类：    傻瓜交换机<br>        可管理型交换机（二层）<br>        三层交换机：带路由功能的交换机</p>
+<p>用户模式：Switch&gt;<br>特权模式：Switch&gt;enable<br>Switch#<br>全局配置模式：Switch#config terminal<br>Switch(config)#<br>接口配置模式： Switch(config)#interface fa0/1<br>Switch(config-if)#<br>Line模式：Switch(config)#line console 0<br>Switch(config-line)#</p>
+<h2 id="vlan技术（虚拟局域网）"><a href="#vlan技术（虚拟局域网）" class="headerlink" title="vlan技术（虚拟局域网）"></a>vlan技术（虚拟局域网）</h2><h3 id="划分vlan方法"><a href="#划分vlan方法" class="headerlink" title="划分vlan方法"></a>划分vlan方法</h3><p>基于端口的划分，基于MAC地址的划分</p>
+<p>基于端口的vlan划分：<br>Switch#show vlan brief<br>Switch#config t<br>Switch(config)#vlan 10<br>Switch(config-vlan)#name rsb<br>Switch(config-vlan)#vlan 20<br>Switch(config-vlan)#name xsb</p>
+<p>将端口加入到对应的vlan<br>interface range f0/1-10 同时选中多个端口<br>interface range f0/1,f0/3<br>Switchport mode access （强制接口成为access接口，并且可以与对方主动进行协商，诱使对方成为access模式。）<br>switchport?mode?trunk  ?强制接口成为Trunk接口，并且主动诱使对方成为Trunk模式，所以当邻居交换机接口为trunk/desirable/auto时会成为Trunk接口。</p>
+<p>查看vlan划分结果是否正确：<br>Sw1(config-if-range)#end<br>Sw1#show vlan brief</p>
+<h2 id="trunk"><a href="#trunk" class="headerlink" title="trunk"></a>trunk</h2><p>需要trunk[vlan中继协议]技术</p>
+<p>1.trunk技术</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">（1）封装</span><br><span class="line">ISL(思科私有):是在数据帧前加26字节，尾加4字节</span><br><span class="line">802.1Q(工业标准):是在数据帧中插入4字节，打标签</span><br><span class="line">802.1Q Native Vlan：默认vlan1不打标，作管理用</span><br><span class="line">（2）模式</span><br><span class="line">Mode				DTP send			DTP Response</span><br><span class="line">Access				-							-</span><br><span class="line">Trunk				  Y							Y</span><br><span class="line">Desirable			Y							Y		企望</span><br><span class="line">Auto					N							Y		自动</span><br><span class="line">Nonegotiate	   N							N   	不协商</span><br></pre></td></tr></table></figure></div>
+
+<p>在VTP中谁与谁同步，不是由角色决定，而是有版本号决定</p>
+<p>版本号大的vlan信息将完全覆盖版本号低的vlan信息</p>
+<p>所有的帧在trunk中都是打上标记的，也就是tag</p>
+<h3 id="例："><a href="#例：" class="headerlink" title="例："></a>例：</h3><p>Sw1(config)#int f0/24<br>Sw1(config-if)#switchport mode trunk        //将该交换机的端口模式改为trunk（干道模式）</p>
+<p>Sw1#sh interfaces f0/24 switchport  //查看端口状态<br>Sw1#sh interfaces trunk   //查看trunk端口<br>SW2(config)#int f0/23<br>SW2(config-if)#switchport mode trunk<br>SW2(config-if)#int f0/24<br>SW2(config-if)#switchport mode trunk</p>
+
+      
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+  
+
+
+
+</section>
+        <aside id="sidebar">
+  
+    <div class="widget-box">
+  <div class="avatar-box">
+    <img class="avatar" src="/images/default-avatar.jpg" title="图片来自网络"></img>
+    <h3 class="avatar-name">
+      
+        和天意乎
+      
+    </h3>
+    <p class="avatar-slogan">
+      视之不见名曰夷，听之不闻名曰希，搏之不得名曰微。此三者不可致诘，故混而为一。
+    </p>
+  </div>
+</div>
+
+
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/03/nginx%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">nginx安全加固</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/apache%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">apache安全加固</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/">远程访问及控制</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/%E6%9C%8D%E5%8A%A1%E4%B8%8E%E8%BF%9B%E7%A8%8B,%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/">服务与进程,文件共享</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+      <div class="widget-box">
+    <h3 class="widget-title">友链</h3>
+    <div class="widget">
+      
+    </div>
+  </div>
+
+  
+</aside>
+      </div>
+      <footer id="footer">
+  <div class="foot-box global-width">
+    &copy; 2020 John Doe &nbsp;&nbsp;
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    &nbsp;|&nbsp;主题 <a href="https://github.com/yiluyanxia/hexo-theme-antiquity" target="_blank" rel="noopener">antiquity</a>
+    <br>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">不蒜子告之   阁下是第<span id="busuanzi_value_site_pv"></span>个访客</span>
+  </div>
+</footer>
+      <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script>
+if (!window.jQuery) {
+var script = document.createElement('script');
+script.src = "/js/jquery-2.0.3.min.js";
+document.body.write(script);
+}
+</script>
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+    </div>
+    <nav id="mobile-nav" class="mobile-nav-box">
+  <div class="mobile-nav-img mobile-nav-top"></div>
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+  <div class="mobile-nav-img  mobile-nav-bottom"></div>
+</nav>    
+  </div>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>路由重分布与路径控制 策略路由 ppp认证和GRE隧道 | 学无止境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  <meta name="description" content="路由重分布与路径控制一、路由重分布概述路由重分布为在同一个互连网络中高效地支持多种路由协议提供了可能，执行路由重分布的路由器被称为边界路由器，因为它们位于两个或多个自治系统的边界上。 路由重分布时度量标准和管理距离是必须要考虑的，在进行重分布时必须转换协议标准，使得它们兼容。种子度量值（Seed Metric)是在路由生分布时定义的，它是一条通过外部重分布进来的路由的初始度量值。路由协议默认的种子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="路由重分布与路径控制 策略路由 ppp认证和GRE隧道">
+<meta property="og:url" content="http://yoursite.com/2020/02/03/%E8%B7%AF%E7%94%B1%E9%87%8D%E5%88%86%E5%B8%83%E4%B8%8E%E8%B7%AF%E5%BE%84%E6%8E%A7%E5%88%B6%20%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1%20ppp%E8%AE%A4%E8%AF%81%E5%92%8CGRE%E9%9A%A7%E9%81%93/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="路由重分布与路径控制一、路由重分布概述路由重分布为在同一个互连网络中高效地支持多种路由协议提供了可能，执行路由重分布的路由器被称为边界路由器，因为它们位于两个或多个自治系统的边界上。 路由重分布时度量标准和管理距离是必须要考虑的，在进行重分布时必须转换协议标准，使得它们兼容。种子度量值（Seed Metric)是在路由生分布时定义的，它是一条通过外部重分布进来的路由的初始度量值。路由协议默认的种子">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-03T08:15:33.206Z">
+<meta property="article:modified_time" content="2020-02-03T06:55:43.553Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="学无止境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/default-avatar.jpg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/highlight.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="fullpage" class="mobile-nav-right">
+    
+      <div id="wrapper" title="图片来自网络">
+    
+    
+      <header id="header">
+  <div id="nav-toggle" class="nav-toggle"></div>
+  <div class="head-box global-width">
+    <nav class="nav-box nav-right">
+      
+        <a class="nav-item" href="/" title
+        
+        >首页</a>
+      
+        <a class="nav-item" href="/archives" title
+        
+        >归档</a>
+      
+    </nav>
+  </div>
+</header>
+      <div id="middlecontent" title class="global-width sidebar-right">
+        <section id="main"><article id="post-路由重分布与路径控制 策略路由 ppp认证和GRE隧道" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      路由重分布与路径控制 策略路由 ppp认证和GRE隧道
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/%E8%B7%AF%E7%94%B1%E9%87%8D%E5%88%86%E5%B8%83%E4%B8%8E%E8%B7%AF%E5%BE%84%E6%8E%A7%E5%88%B6%20%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1%20ppp%E8%AE%A4%E8%AF%81%E5%92%8CGRE%E9%9A%A7%E9%81%93/" class="article-date">
+  <time datetime="2020-02-03T08:15:33.206Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h1 id="路由重分布与路径控制"><a href="#路由重分布与路径控制" class="headerlink" title="路由重分布与路径控制"></a>路由重分布与路径控制</h1><h2 id="一、路由重分布概述"><a href="#一、路由重分布概述" class="headerlink" title="一、路由重分布概述"></a>一、路由重分布概述</h2><p>路由重分布为在同一个互连网络中高效地支持多种路由协议提供了可能，执行路由重分布的路由器被称为边界路由器，因为它们位于两个或多个自治系统的边界上。</p>
+<p>路由重分布时度量标准和管理距离是必须要考虑的，在进行重分布时必须转换协议标准，使得它们兼容。种子度量值（Seed Metric)是在路由生分布时定义的，它是一条通过外部重分布进来的路由的初始度量值。路由协议默认的种子度量值如下表：</p>
+<table>
+<thead>
+<tr>
+<th>路由重分布进和路由协议</th>
+<th>默认种子度量值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RIP</td>
+<td>无限大</td>
+</tr>
+<tr>
+<td>EIGRP</td>
+<td>无限大</td>
+</tr>
+<tr>
+<td>OSPF</td>
+<td>BGP为1，其也为20</td>
+</tr>
+<tr>
+<td>IS-IS</td>
+<td>0</td>
+</tr>
+<tr>
+<td>BGP</td>
+<td>IGP的度量值</td>
+</tr>
+</tbody></table>
+<p>考虑的问题：</p>
+<p>1.路由反馈：双向重分布有可能把从一个自治系统学到的路由信息发送回该自治系统。</p>
+<p>2.路由信息的兼容：不同路由协议的度量标准是不同的</p>
+<p>3.收敛时间不一致</p>
+<h2 id="二、路径控制概述"><a href="#二、路径控制概述" class="headerlink" title="二、路径控制概述"></a>二、路径控制概述</h2><p>为了保证网络的高效运行及在路由重分布的时候避免次优路由或者路由环路，有必要对路由更新进行控制，常用的方法有被动接口、默认路由、静态路由、路由映射表、分布列表、前缀列表、偏移列表、Cisco IOS IP服务等级协议（SLA）和策略路由。在进行路由控制时，可能是多种方法进行组合。</p>
+<h3 id="1、路由映射表（Route-Map）"><a href="#1、路由映射表（Route-Map）" class="headerlink" title="1、路由映射表（Route Map）"></a><strong>1、</strong>路由映射表（Route Map）</h3><p>可以做复杂的访问控制列表，主要功能包括路由控制和策略路由等。</p>
+<h4 id="（1）定义路由映射表的格式如下："><a href="#（1）定义路由映射表的格式如下：" class="headerlink" title="（1）定义路由映射表的格式如下："></a>（1）定义路由映射表的格式如下：</h4><p><strong>定义路由映射表：</strong>route-map map-tag [permit | deny] [sequence-number]</p>
+<p><strong>条件匹配：</strong>macth（常用的匹配条件包括IP地址、接口、度量值、tag、路由类型以及数据包长度等）</p>
+<p>​     如果格式为：match ip address a b c   表示逻辑或，只要有一个条件满足即可</p>
+<p>​     如果格式为：match ip address a </p>
+<p>​                            match ip address b </p>
+<p>​                            match ip address c     表示逻辑与，必须同时满足所有条件</p>
+<h4 id="定义行为：set"><a href="#定义行为：set" class="headerlink" title="定义行为：set"></a>定义行为：set</h4><table>
+<thead>
+<tr>
+<th><strong>Set</strong>行为</th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>set ip next  hop</td>
+<td>设定数据包的下一跳地址</td>
+</tr>
+<tr>
+<td>set interface</td>
+<td>设定数据包出接口</td>
+</tr>
+<tr>
+<td>set ip default  next hop</td>
+<td>设置默认的下一跳地址，用于当路由表里没有达到目的地址路由条目的时候</td>
+</tr>
+<tr>
+<td>set ip tos</td>
+<td>设定IP数据包的TOS值</td>
+</tr>
+<tr>
+<td>set ip  precedence</td>
+<td>设定IP数据包的优先级</td>
+</tr>
+<tr>
+<td>Set metric</td>
+<td>设置路由的度量值</td>
+</tr>
+<tr>
+<td>set tag</td>
+<td>设定路由的标记值</td>
+</tr>
+</tbody></table>
+<h4 id="（2）路由映射表有如下特征"><a href="#（2）路由映射表有如下特征" class="headerlink" title="（2）路由映射表有如下特征"></a><strong>（2）路由映射表有如下特征</strong></h4><p>A.一个route map末尾默认行为是“deny any”</p>
+<p>  如执行策略路由时，没有匹配则正常转发</p>
+<p>  如路由重分时，没有匹配则被过滤掉</p>
+<p>B.一个route map可以包含多个route map陈述，从上到下被执行，如route map陈述中没有math，则匹配所有。</p>
+<p>C.序列号指定了条件执行的顺序，不写默认为10，不会自动递增</p>
+<p>D.route map中不写permit deny默认为permit</p>
+<p>E.在删除route map时，没写编号则删除整个route map</p>
+<h3 id="2、策略路由"><a href="#2、策略路由" class="headerlink" title="2、策略路由"></a><strong>2、</strong>策略路由</h3><p>策略路由提供了一种根据网络管理者制定的策略来进行数据包转发的机制。基于策略的路由比传统路由能力更强，使用灵活，它使网络管理者不仅能够根据目的地址，而且能够根据协议类型、报文大小、应用或IP源地址来选择转发路径。策略由路由映射表来定义。</p>
+<h2 id="三、路由重分布实验"><a href="#三、路由重分布实验" class="headerlink" title="三、路由重分布实验"></a><strong>三、</strong>路由重分布实验</h2><p><strong>实验目的：</strong></p>
+<p>种子度量值的配置</p>
+<p>路由重分布参数的含义</p>
+<p>静态路由重分布</p>
+<p>直连路由重分布</p>
+<p>RIP与EIGRP的重分布</p>
+<p>EIGRP和OSPF的重分布</p>
+<p>重分布路由的查看和调试</p>
+<h3 id="实验步骤："><a href="#实验步骤：" class="headerlink" title="实验步骤："></a><strong>实验步骤：</strong></h3><p>1、配置路由协议 </p>
+<p>2、配置路由重分布与路由映射表</p>
+<p>  要求将172.16.0.0/172.16.0.2偶数重分至OSPF类型2，metric值为200</p>
+<p>要求将172.16.0.1/172.16.0.3偶数重分至OSPF类型1，metric值为100</p>
+<h3 id="策略路由"><a href="#策略路由" class="headerlink" title="策略路由"></a><strong>策略路由</strong></h3><p>策略路由提供了一种根据网络管理者制定的策略来进行数据包转发的机制。基于策略的路由比传统路由能力更强，使用更灵活，它使用网络管理者不仅能够根据目的地址，而且能够根据协议类型、报文大小、应用或IP源地址来选择转发路径。策略由路由映射表来定义。</p>
+<h4 id="实验一、基于源IP地址的策略路由配置"><a href="#实验一、基于源IP地址的策略路由配置" class="headerlink" title="实验一、基于源IP地址的策略路由配置"></a><strong>实验一、基于源IP地址的策略路由配置</strong></h4><p><strong>实验目的：</strong></p>
+<p>1、用route-map定义路由策略。</p>
+<p>2、在接口下应用路由策略。</p>
+<p>3、基于源IP地址的策略路由的配置和调试。</p>
+<p><strong>实验步骤：</strong></p>
+<p>在路由器R1的f0/0接口应用IP策略路由CCNA，使得从主机PC2来的数据设置一跳地址为：172.16.12.2；从主机PC3来的数据设置下一跳地址为：172.16.21.2，所有其他的数据包正常转发，整个网络运行EIGRP路由协议。</p>
+<p><strong>配置ACL</strong></p>
+<p>R1(config)#access-list 1 permit 172.16.1.2</p>
+<p>R1(config)#access-list 2 permit 172.16.1.3</p>
+<p><strong>配置路由映射表</strong></p>
+<p>R1(config)#route-map CCNA permit 10</p>
+<p>R1(config-route-map)#match ip address 1</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.12.2</p>
+<p>R1(config-route-map)#exit</p>
+<p>R1(config)#route-map CCNA permit 20</p>
+<p>R1(config-route-map)#match ip address 2</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.21.2</p>
+<p><strong>应用策略路由</strong></p>
+<p>R1(config)#int f0/0</p>
+<p>R1(config-if)#ip policy route-map CCNA</p>
+<p><strong>实验调试：</strong></p>
+<p><strong>1、</strong>查看路由路径</p>
+<p>PC2#traceroute 172.16.2.2</p>
+<p>PC3#traceroute 172.16.2.2</p>
+<p><strong>2、</strong>在R1上显示调试信息</p>
+<p>R1#debug ip policy</p>
+<p>PC2：ping 172.16.2.2 </p>
+<p>PC6:ping 172.16.2.2</p>
+<p><strong>3</strong>、显示在哪些接口上应用了策略路由</p>
+<p>R1#sh ip policy</p>
+<p><strong>4</strong>、显示定义的所有路由策略及路由策略匹配的情况</p>
+<h4 id="实验二、基于数据包长度的策略路由配置"><a href="#实验二、基于数据包长度的策略路由配置" class="headerlink" title="实验二、基于数据包长度的策略路由配置"></a><strong>实验二、基于数据包长度的策略路由配置</strong></h4><p><strong>实验目的：</strong></p>
+<p>1、用route-map定义路由策略。</p>
+<p>2、在接口下应用路由策略。</p>
+<p>3、基于数据包长度的策略路由的配置和调试。</p>
+<p><strong>实验拓朴：</strong></p>
+<p><strong>实验步骤：</strong></p>
+<p>在R1的f0/0接口应用IP策略路由CCNP，使得对大小为“64-100”字节的数据包设置出接口为s1/0;数据包大小“101-100”字节的数据包设置出接口为“f0/1”,所有其他的数据包正常转发，整个网络运行EIGRP路由协议。</p>
+<p><strong>配置路由映射表</strong></p>
+<p>R1(config)#route-map CCNP permit 10</p>
+<p>R1(config-route-map)#match length 64 100</p>
+<p>R1(config-route-map)#set interface s1/0</p>
+<p>R1(config)#route-map CCNP permit 20</p>
+<p>R1(config-route-map)#match length 101 1000</p>
+<p>R1(config-route-map)#set interface f0/1</p>
+<p><strong>应用策略路由</strong></p>
+<p>R1(config)#int f0/0</p>
+<p>R1(config-if)#ip policy route-map CCNP</p>
+<p>R1(config-if)#exit</p>
+<p>R1(config)#ip local policy route-map CCNP</p>
+<p><strong>实验调试：</strong></p>
+<p><strong>1.</strong>在主机上执行扩展ping命令，在R1上显示调试信息。</p>
+<p>PC2：ping 172.16.2.2 repeat 1 size 90</p>
+<p>PC2：ping 172.16.2.2 repeat 1 size 300</p>
+<p>PC2：ping 172.16.2.2 repeat 1 size 1200</p>
+<p><strong>2</strong>、显示在哪些接口上应用了策略路由</p>
+<p>R1#sh ip policy</p>
+<p><strong>3</strong>、显示定义的所有路由策略及路由策略匹配的情况</p>
+<p>R1#sh ip route-map CCNP</p>
+<h4 id="实验三、基于应用的策略路由配置"><a href="#实验三、基于应用的策略路由配置" class="headerlink" title="实验三、基于应用的策略路由配置"></a><strong>实验三、基于应用的策略路由配置</strong></h4><p><strong>实验目的：</strong></p>
+<p>1、用route-map定义路由策略。</p>
+<p>2、在接口下应用路由策略。</p>
+<p>3、基于数据包长度的策略路由的配置和调试。</p>
+<p><strong>实验步骤：</strong></p>
+<p>在R1的f0/0接口应用IP策略路由CCIE，使得对HTTP数据包设置一跳地址为：172.16.12.2，并且设置IP数据包优先级为”flash”,为telnet数据包设置下一跳地址为：172.16.21.2，并且设置IP数据包优先级为：critical，所有其他的数据包正常转发，整个路由协议运行EIGRP。</p>
+<p><strong>配置R2的http与telnet访问</strong></p>
+<p> R2(config)#ip http server</p>
+<p>R2(config)#line vty 0 4</p>
+<p>R2(config-line)#no login</p>
+<p>R2(config-line)#privilege level 15</p>
+<p><strong>配置扩展ACL</strong></p>
+<p>R1(config)#ip access-list extended HTTP</p>
+<p>R1(config-ext-nacl)#permit tcp any any eq 80</p>
+<p>R1(config-ext-nacl)#exit</p>
+<p>R1(config)#ip access-list extended TELNET</p>
+<p>R1(config-ext-nacl)#permit tcp any any eq 23</p>
+<p><strong>配置路由映射表</strong></p>
+<p>R1(config)#route-map CCIE permit 10</p>
+<p>R1(config-route-map)#match ip address HTTP</p>
+<p>R1(config-route-map)#set ip precedence flash</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.12.2</p>
+<p>R1(config)#route-map CCIE permit 20</p>
+<p>R1(config-route-map)#match ip address TELNET</p>
+<p>R1(config-route-map)#set ip precedence critical</p>
+<p>R1(config-route-map)#set ip next-hop 172.16.21.2</p>
+<p><strong>应用路由映射表</strong></p>
+<p>R1(config)#int f0/0</p>
+<p>R1(config-if)#ip policy route-map CCIE</p>
+<p>R1(config)#ip local policy route-map CCIE</p>
+<h2 id="策略路由实验："><a href="#策略路由实验：" class="headerlink" title="策略路由实验："></a><strong>策略路由实验：</strong></h2><p>某学校网络拓朴图如右图，拥有电信、联通两条出口线路，内网分为宿舍区和教学区，分别属于lvan10和vlan20。通过策略路由配置实现以下要求：</p>
+<p>1、宿舍区访问互联网使用电信出口，教学区使用联通出口。</p>
+<p>2、任何一条链路故障，能够自动切换。</p>
+<p>3、宿舍区和教学区均使用路由器出口地址PAT。</p>
+<p><strong>实验步骤：</strong></p>
+<p>1、配置外部网络协议为rip2</p>
+<p>2、配置内部网络协议为ospf</p>
+<p>3、配置ACL</p>
+<p>4、配置路由策略</p>
+<p>5、配置NAT</p>
+<p><strong>配置一：能实现宿舍区访问互联网使用电信出口，</strong></p>
+<p><strong>教学区使用联通出口。但不能实现自动切换</strong></p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">R1(config)#access-list 10 permit 192.168.10.0 0.0.0.255</span><br><span class="line">R1(config)#access-list 20 permit 192.168.20.0 0.0.0.255</span><br><span class="line">R1(config)#route-map dianxin permit 10</span><br><span class="line">R1(config-route-map)#match int s2&#x2F;0</span><br><span class="line">R1(config)#route-map liantong permit 20</span><br><span class="line">R1(config-route-map)#match int s2&#x2F;1</span><br><span class="line">R1(config)#ip nat inside source route-map dianxin int s2&#x2F;0 overload</span><br><span class="line">R1(config)#ip nat inside source route-map liantong int s2&#x2F;1 overload</span><br><span class="line">R1(config)#int s2&#x2F;0</span><br><span class="line">R1(config-if)#ip nat outside</span><br><span class="line">R1(config)#int s2&#x2F;1</span><br><span class="line">R1(config-if)#ip nat outside</span><br><span class="line">R1(config)#int f0&#x2F;0</span><br><span class="line">R1(config-if)#ip nat inside</span><br><span class="line">R1(config)#int f1&#x2F;0</span><br><span class="line">R1(config-if)#ip nat inside</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>配置二：能实现宿舍区访问互联网使用电信出口，</strong></p>
+<p><strong>教学区使用联通出口。并能实现自动切换</strong></p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">R1(config)#access-list 10 permit 192.168.10.0 0.0.0.255</span><br><span class="line">R1(config)#access-list 20 permit 192.168.20.0 0.0.0.255</span><br><span class="line">R1(config)#route-map fenliu permit 10</span><br><span class="line">R1(config-route-map)#match ip add 10</span><br><span class="line">R1(config-route-map)#set ip next-hop 50.1.1.2 60.1.1.2</span><br><span class="line">R1(config)#route-map fenliu permit 20</span><br><span class="line">R1(config-route-map)#match ip add 20</span><br><span class="line">R1(config-route-map)#set ip next-hop 60.1.1.2 50.1.1.2</span><br><span class="line">R1(config)#int e1&#x2F;0</span><br><span class="line">R1(config-if)#ip policy route-map fenliu</span><br><span class="line">R1(config)#int e1&#x2F;1</span><br><span class="line">R1(config-if)#ip policy route-map fenliu</span><br></pre></td></tr></table></figure></div>
+
+
+
+      
+    </div>
+    
+      <footer class="article-footer">
+        完
+      </footer>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  <div class="article-nav-block">
+    
+      <a href="/2020/02/03/%E7%A3%81%E7%9B%98%E7%9A%84%E5%88%86%E5%8C%BA%E4%B8%8E%E6%8C%82%E8%BD%BD/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption"></strong>
+        <div class="article-nav-title">
+          
+            磁盘的分区与挂载
+          
+        </div>
+      </a>
+    
+  </div>
+  <div class="article-nav-block">
+    
+      <a href="/2020/02/03/ACL%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%88%97%E8%A1%A8/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">ACL访问控制列表</div>
+        <strong class="article-nav-caption"></strong>
+      </a>
+    
+  </div>
+</nav>
+
+    <link rel="stylesheet" href="/css/gitment.css"> 
+<script src="/js/gitment.js"></script>
+
+<div id="gitmentContainer"></div>
+
+<script>
+var gitment = new Gitment({
+  owner: '',
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  },
+})
+gitment.render('gitmentContainer')
+</script>
+
+  
+  
+</article>
+</section>
+        <aside id="sidebar">
+  
+    <div class="widget-box">
+  <div class="avatar-box">
+    <img class="avatar" src="/images/default-avatar.jpg" title="图片来自网络"></img>
+    <h3 class="avatar-name">
+      
+        和天意乎
+      
+    </h3>
+    <p class="avatar-slogan">
+      视之不见名曰夷，听之不闻名曰希，搏之不得名曰微。此三者不可致诘，故混而为一。
+    </p>
+  </div>
+</div>
+
+
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/03/nginx%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">nginx安全加固</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/apache%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">apache安全加固</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/">远程访问及控制</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/%E6%9C%8D%E5%8A%A1%E4%B8%8E%E8%BF%9B%E7%A8%8B,%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/">服务与进程,文件共享</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+      <div class="widget-box">
+    <h3 class="widget-title">友链</h3>
+    <div class="widget">
+      
+    </div>
+  </div>
+
+  
+</aside>
+      </div>
+      <footer id="footer">
+  <div class="foot-box global-width">
+    &copy; 2020 John Doe &nbsp;&nbsp;
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    &nbsp;|&nbsp;主题 <a href="https://github.com/yiluyanxia/hexo-theme-antiquity" target="_blank" rel="noopener">antiquity</a>
+    <br>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">不蒜子告之   阁下是第<span id="busuanzi_value_site_pv"></span>个访客</span>
+  </div>
+</footer>
+      <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script>
+if (!window.jQuery) {
+var script = document.createElement('script');
+script.src = "/js/jquery-2.0.3.min.js";
+document.body.write(script);
+}
+</script>
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+    </div>
+    <nav id="mobile-nav" class="mobile-nav-box">
+  <div class="mobile-nav-img mobile-nav-top"></div>
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+  <div class="mobile-nav-img  mobile-nav-bottom"></div>
+</nav>    
+  </div>
+</body>
+</html>

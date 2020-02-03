@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>磁盘的分区与挂载 | 学无止境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  <meta name="description" content="磁盘的分区与挂载1.磁盘(硬盘）在Linux系统中的表示方法  IDE硬盘：hda1 hda2  hdb1 hdc1 ….  SATA硬盘&#x2F;SCSI&#x2F;USB接口的移动盘：sda1 sda2 sdb1 2.硬盘分区：主分区    最多只能分4个，是可以直接使用，主要用于系统盘。编号为1-4 ​            扩展分区  不能直接使用，必须有主分区后才能将所有剩余空间分为扩展分区，可以建立逻辑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="磁盘的分区与挂载">
+<meta property="og:url" content="http://yoursite.com/2020/02/03/%E7%A3%81%E7%9B%98%E7%9A%84%E5%88%86%E5%8C%BA%E4%B8%8E%E6%8C%82%E8%BD%BD/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="磁盘的分区与挂载1.磁盘(硬盘）在Linux系统中的表示方法  IDE硬盘：hda1 hda2  hdb1 hdc1 ….  SATA硬盘&#x2F;SCSI&#x2F;USB接口的移动盘：sda1 sda2 sdb1 2.硬盘分区：主分区    最多只能分4个，是可以直接使用，主要用于系统盘。编号为1-4 ​            扩展分区  不能直接使用，必须有主分区后才能将所有剩余空间分为扩展分区，可以建立逻辑">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-03T08:28:54.704Z">
+<meta property="article:modified_time" content="2020-02-03T08:14:08.931Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="学无止境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/default-avatar.jpg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/highlight.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="fullpage" class="mobile-nav-right">
+    
+      <div id="wrapper" title="图片来自网络">
+    
+    
+      <header id="header">
+  <div id="nav-toggle" class="nav-toggle"></div>
+  <div class="head-box global-width">
+    <nav class="nav-box nav-right">
+      
+        <a class="nav-item" href="/" title
+        
+        >首页</a>
+      
+        <a class="nav-item" href="/archives" title
+        
+        >归档</a>
+      
+    </nav>
+  </div>
+</header>
+      <div id="middlecontent" title class="global-width sidebar-right">
+        <section id="main"><article id="post-磁盘的分区与挂载" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      磁盘的分区与挂载
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/02/03/%E7%A3%81%E7%9B%98%E7%9A%84%E5%88%86%E5%8C%BA%E4%B8%8E%E6%8C%82%E8%BD%BD/" class="article-date">
+  <time datetime="2020-02-03T08:28:54.704Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+    
+  </div>
+  
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <h2 id="磁盘的分区与挂载"><a href="#磁盘的分区与挂载" class="headerlink" title="磁盘的分区与挂载"></a>磁盘的分区与挂载</h2><h3 id="1-磁盘-硬盘）在Linux系统中的表示方法"><a href="#1-磁盘-硬盘）在Linux系统中的表示方法" class="headerlink" title="1.磁盘(硬盘）在Linux系统中的表示方法"></a>1.磁盘(硬盘）在Linux系统中的表示方法</h3><p>  IDE硬盘：hda1 hda2  hdb1 hdc1 ….<br>  SATA硬盘/SCSI/USB接口的移动盘：sda1 sda2 sdb1</p>
+<h3 id="2-硬盘分区："><a href="#2-硬盘分区：" class="headerlink" title="2.硬盘分区："></a>2.硬盘分区：</h3><p>主分区    最多只能分4个，是可以直接使用，主要用于系统盘。编号为1-4</p>
+<p>​            扩展分区  不能直接使用，必须有主分区后才能将所有剩余空间分为扩展分区，可以建立逻辑分区。1-4，除主分区外。<br>​            逻辑分区   可以直接使用，编号从5开始，不能做为系统引导盘。</p>
+<h3 id="3-磁盘分区的格式："><a href="#3-磁盘分区的格式：" class="headerlink" title="3.磁盘分区的格式："></a>3.磁盘分区的格式：</h3><p>windows 系统中的格式有 fat fat 16  fat32   分区大小也会受到限制、文件的大小会受到限制，安全性能不高。</p>
+<p>​           NTFS   支持大容量分区，支持NTFS权限设置，安全性能较高<br>​           Linux系统中的常用格式有 ext2 ext3 ext4</p>
+<h3 id="4-挂载"><a href="#4-挂载" class="headerlink" title="4.挂载"></a>4.挂载</h3><p>​    步骤一：向Linux服务器添加一块硬盘，并重启系统。<br>​    步骤二：使用命令查看系统当中的硬盘及其分区信息<br>​            ls /dev/sd*   查看/dev目录下的硬盘文件<br>​            fdisk -l   查看硬盘分区的信息<br>​    步骤三：对磁盘进行分区<br>​            fdisk 磁盘文件名<br>​             fdisk /dev/sdb   对sdb这块硬盘进行分区<br>​    步骤四：格式化磁盘分区<br>​            mkfs -t 分区格式 分区名称<br>​            mkfs -t ext4 /dev/sdb1<br>​    步骤五：挂载分区<br>​           mount -t 分区格式 设备名称  空目录名称<br>​           mount -t ext4 /dev/sdb1 /mnt/sdb1<br>​           mount -t ext4 -o rw /dev/sdb1 /mnt/sdb1<br>​           检查是否挂载成功：mount<br>​           取消挂载：umount 挂载目录的名称 （不能在挂载目录下进行）<br>​           查看已挂载分区的信息：df -hT /mnt/sdb1<br>​           使用mount命令挂载的文件系统，只是临时的，如果系统重启则需要重新挂载。<br>   步骤六：可以使用/etc/fstab文件对文件系统进行永久挂载。</p>
+<p>vim /etc/fstab</p>
+<p>  /dev/sdb1     /data     ext4     defaults     0     0 </p>
+<p>挂载光盘（光盘的设备文件名为：/dev/sr0,文件系统的类型为：iso9660)<br>          mount -t iso9660 /dev/sr0 /mnt/cdrom       </p>
+<h2 id="LVM-卷管理"><a href="#LVM-卷管理" class="headerlink" title="LVM 卷管理"></a>LVM 卷管理</h2><p>1、LVM 的概念 LVM 可以实现对磁盘的动态管理，在磁盘不用重新分区的情况下动态调整文件系统的大 小，利用 LVM 管理的文件系统可以跨越磁盘。“/boot”分区用于存放系统引导文件，不能应 用 LVM 机制。</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>物理卷管理</th>
+<th>卷组管理</th>
+<th>逻辑卷管理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scan 扫描</td>
+<td><strong>pv</strong>scan</td>
+<td><strong>vg</strong>scan</td>
+<td><strong>lv</strong>scan</td>
+</tr>
+<tr>
+<td>Create 建立</td>
+<td>pvcreate</td>
+<td>vgcreate</td>
+<td>lvcreate</td>
+</tr>
+<tr>
+<td>Display 显示</td>
+<td>pvdisplay</td>
+<td>vgdisplay</td>
+<td>lvdisplay</td>
+</tr>
+<tr>
+<td>Remove 删除</td>
+<td>pvremove</td>
+<td>vgremove</td>
+<td>lvremove</td>
+</tr>
+<tr>
+<td>Reduce 缩减</td>
+<td></td>
+<td>vgreduce</td>
+<td>lvreduce</td>
+</tr>
+<tr>
+<td>Extend 扩展</td>
+<td></td>
+<td>vgextend</td>
+<td>lvextend</td>
+</tr>
+</tbody></table>
+<h3 id="1、创建磁盘分区"><a href="#1、创建磁盘分区" class="headerlink" title="1、创建磁盘分区"></a>1、创建磁盘分区</h3><p>创建物理分区： /dev/sdb1 和 /dev/sdb5,并修改分区标记为 8e。 </p>
+<h3 id="2、创建物理卷-PV"><a href="#2、创建物理卷-PV" class="headerlink" title="2、创建物理卷 PV"></a>2、创建物理卷 PV</h3><p>然后创建物理卷 PV，用到的命令是 pvcreate </p>
+<p>（相当于图形操作中的初始化磁盘） </p>
+<p>Pvcreate /dev/sdb1 /dev/sdb5</p>
+<h3 id="3、创建卷组-VG"><a href="#3、创建卷组-VG" class="headerlink" title="3、创建卷组 VG"></a>3、创建卷组 VG</h3><p>接下来创建卷组 VG ,用到的命令是 vgcreate </p>
+<p>使用物理卷/dev/sdb1 和 /dev/sdb5 创建名为 wgroup 的卷组 </p>
+<p>vgcreate wgroup /dev/sdb1 /dev/sdb5 </p>
+<p>创建完后可以用 vgdisplay 命令查看卷组的信息 </p>
+<h3 id="4、创建逻辑卷"><a href="#4、创建逻辑卷" class="headerlink" title="4、创建逻辑卷"></a>4、创建逻辑卷</h3><p>从卷中创建逻辑卷，用到的命令是 lvcreate </p>
+<p>格式如下： </p>
+<p>lvcreate -L 容量大小 -n 逻辑卷名 卷组名 </p>
+<p>例：从 wgroup 卷组中创建名为 ftp 的容量为 19G 的逻辑卷 </p>
+<p>lvcreate -L 19G -n ftp wgroup </p>
+<h3 id="5、创建并挂载文件系统"><a href="#5、创建并挂载文件系统" class="headerlink" title="5、创建并挂载文件系统"></a>5、创建并挂载文件系统</h3><p>逻辑卷相当于一个磁盘分区，要使用它首先要将其格式化 </p>
+<p>mkfs -t ext4 <strong>/dev/wgroup/ftp</strong> </p>
+<p>然后创建挂载目录点，将逻辑卷挂载 </p>
+<p>mkdir /var/ftp </p>
+<p>挂载：mount /dev/wgroup/ftp /mnt/ftp </p>
+<p>修改/etc/fstab 文件，实现永久挂载 </p>
+<p>vim /etc/fstab </p>
+<h3 id="6、扩展逻辑空间"><a href="#6、扩展逻辑空间" class="headerlink" title="6、扩展逻辑空间"></a>6、扩展逻辑空间</h3><p>最后将第三块硬盘/dev/sdc 加入到逻辑卷中。 </p>
+<p>先将硬盘分成一个分区/dev/sdc1,并将分区标记修改为 8e </p>
+<p>然后将分区转换为物理卷：pvcreate /dev/sdc1 </p>
+<p>将物理卷/dev/sdc1 添加到卷组 wgroup 中：vgextend wgroup /dev/sdc1 </p>
+<p>扩展逻辑卷的空间：lvextend -L +10G /dev/wgroup/ftp </p>
+<p>执行 resize2fs 命令重设文件系统的大小：resize2fs /dev/wgroup/ftp </p>
+<p>再次查看文件系统/var/ftp 的空间大小，可以看到已经变成了 29GB： df -HT</p>
+
+      
+    </div>
+    
+      <footer class="article-footer">
+        完
+      </footer>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  <div class="article-nav-block">
+    
+      <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption"></strong>
+        <div class="article-nav-title">
+          
+            DHCP配置：
+          
+        </div>
+      </a>
+    
+  </div>
+  <div class="article-nav-block">
+    
+      <a href="/2020/02/03/%E8%B7%AF%E7%94%B1%E9%87%8D%E5%88%86%E5%B8%83%E4%B8%8E%E8%B7%AF%E5%BE%84%E6%8E%A7%E5%88%B6%20%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1%20ppp%E8%AE%A4%E8%AF%81%E5%92%8CGRE%E9%9A%A7%E9%81%93/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">路由重分布与路径控制 策略路由 ppp认证和GRE隧道</div>
+        <strong class="article-nav-caption"></strong>
+      </a>
+    
+  </div>
+</nav>
+
+    <link rel="stylesheet" href="/css/gitment.css"> 
+<script src="/js/gitment.js"></script>
+
+<div id="gitmentContainer"></div>
+
+<script>
+var gitment = new Gitment({
+  owner: '',
+  repo: '',
+  oauth: {
+    client_id: '',
+    client_secret: '',
+  },
+})
+gitment.render('gitmentContainer')
+</script>
+
+  
+  
+</article>
+</section>
+        <aside id="sidebar">
+  
+    <div class="widget-box">
+  <div class="avatar-box">
+    <img class="avatar" src="/images/default-avatar.jpg" title="图片来自网络"></img>
+    <h3 class="avatar-name">
+      
+        和天意乎
+      
+    </h3>
+    <p class="avatar-slogan">
+      视之不见名曰夷，听之不闻名曰希，搏之不得名曰微。此三者不可致诘，故混而为一。
+    </p>
+  </div>
+</div>
+
+
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/03/nginx%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">nginx安全加固</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/apache%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">apache安全加固</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/">远程访问及控制</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/%E6%9C%8D%E5%8A%A1%E4%B8%8E%E8%BF%9B%E7%A8%8B,%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/">服务与进程,文件共享</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/03/DHCP%E9%85%8D%E7%BD%AE%EF%BC%9A/">DHCP配置：</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+      <div class="widget-box">
+    <h3 class="widget-title">友链</h3>
+    <div class="widget">
+      
+    </div>
+  </div>
+
+  
+</aside>
+      </div>
+      <footer id="footer">
+  <div class="foot-box global-width">
+    &copy; 2020 John Doe &nbsp;&nbsp;
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    &nbsp;|&nbsp;主题 <a href="https://github.com/yiluyanxia/hexo-theme-antiquity" target="_blank" rel="noopener">antiquity</a>
+    <br>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">不蒜子告之   阁下是第<span id="busuanzi_value_site_pv"></span>个访客</span>
+  </div>
+</footer>
+      <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script>
+if (!window.jQuery) {
+var script = document.createElement('script');
+script.src = "/js/jquery-2.0.3.min.js";
+document.body.write(script);
+}
+</script>
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+    </div>
+    <nav id="mobile-nav" class="mobile-nav-box">
+  <div class="mobile-nav-img mobile-nav-top"></div>
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+  <div class="mobile-nav-img  mobile-nav-bottom"></div>
+</nav>    
+  </div>
+</body>
+</html>
